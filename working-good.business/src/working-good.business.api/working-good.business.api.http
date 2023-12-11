@@ -1,0 +1,14 @@
+@url = http://localhost:4001
+
+###
+POST {{url}}/users/sign-up
+Content-Type: application/json
+
+{
+  "Id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "Email": "string",
+  "FirstName": "string",
+  "LastName": "string",
+  "Password": "string",
+  "Role": "string"
+}

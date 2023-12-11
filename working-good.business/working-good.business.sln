@@ -10,6 +10,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working-good.business.unit-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "working-good.business.core.tests", "tests\working-good.business.unit-tests\working-good.business.core.tests\working-good.business.core.tests.csproj", "{07DB01D5-99EF-42FF-B79E-11FB3E8DC5F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "working-good.business.application", "src\working-good.business.application\working-good.business.application.csproj", "{0E988320-11D1-49A4-AD80-5D4E19B75274}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "working-good.business.application.tests", "tests\working-good.business.unit-tests\working-good.business.application.tests\working-good.business.application.tests.csproj", "{65223E03-1027-4565-9DEC-7BA5CA763EC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "working-good.business.api", "src\working-good.business.api\working-good.business.api.csproj", "{2DECF659-400D-4FC0-B0AB-914ACD98BB3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "working-good.business.infrastructure", "src\working-good.business.infrastructure\working-good.business.infrastructure.csproj", "{2612AFC3-5FCB-43E3-AB1E-E83436EA6990}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +27,10 @@ Global
 		{88FFE811-542A-4949-BCD7-965EFABA76E7} = {9631C347-F4EA-4589-B246-C345F605AA18}
 		{A334F3D2-4A2F-4ECE-9E50-274AA36FA3BC} = {9B4FAAC6-4463-499D-9EA2-7249C5C2B8FD}
 		{07DB01D5-99EF-42FF-B79E-11FB3E8DC5F4} = {A334F3D2-4A2F-4ECE-9E50-274AA36FA3BC}
+		{0E988320-11D1-49A4-AD80-5D4E19B75274} = {9631C347-F4EA-4589-B246-C345F605AA18}
+		{65223E03-1027-4565-9DEC-7BA5CA763EC3} = {A334F3D2-4A2F-4ECE-9E50-274AA36FA3BC}
+		{2DECF659-400D-4FC0-B0AB-914ACD98BB3C} = {9631C347-F4EA-4589-B246-C345F605AA18}
+		{2612AFC3-5FCB-43E3-AB1E-E83436EA6990} = {9631C347-F4EA-4589-B246-C345F605AA18}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{88FFE811-542A-4949-BCD7-965EFABA76E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -29,5 +41,21 @@ Global
 		{07DB01D5-99EF-42FF-B79E-11FB3E8DC5F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07DB01D5-99EF-42FF-B79E-11FB3E8DC5F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07DB01D5-99EF-42FF-B79E-11FB3E8DC5F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E988320-11D1-49A4-AD80-5D4E19B75274}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E988320-11D1-49A4-AD80-5D4E19B75274}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E988320-11D1-49A4-AD80-5D4E19B75274}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E988320-11D1-49A4-AD80-5D4E19B75274}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65223E03-1027-4565-9DEC-7BA5CA763EC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65223E03-1027-4565-9DEC-7BA5CA763EC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65223E03-1027-4565-9DEC-7BA5CA763EC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65223E03-1027-4565-9DEC-7BA5CA763EC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DECF659-400D-4FC0-B0AB-914ACD98BB3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DECF659-400D-4FC0-B0AB-914ACD98BB3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DECF659-400D-4FC0-B0AB-914ACD98BB3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DECF659-400D-4FC0-B0AB-914ACD98BB3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2612AFC3-5FCB-43E3-AB1E-E83436EA6990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2612AFC3-5FCB-43E3-AB1E-E83436EA6990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2612AFC3-5FCB-43E3-AB1E-E83436EA6990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2612AFC3-5FCB-43E3-AB1E-E83436EA6990}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

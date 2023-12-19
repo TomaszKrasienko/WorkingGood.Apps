@@ -1,6 +1,9 @@
 @url = http://localhost:4001
 
 ###
+GET {{url}}/users/get-available-roles
+
+###
 POST {{url}}/users/sign-up
 Content-Type: application/json
 

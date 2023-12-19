@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/working-good.business.api.props" />
+</Project>

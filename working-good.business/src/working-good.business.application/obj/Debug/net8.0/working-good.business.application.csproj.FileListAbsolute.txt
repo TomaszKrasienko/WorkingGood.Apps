@@ -1,0 +1,16 @@
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/bin/Debug/net8.0/working-good.business.application.deps.json
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/bin/Debug/net8.0/working-good.business.application.dll
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/bin/Debug/net8.0/working-good.business.application.pdb
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/bin/Debug/net8.0/working-good.business.core.dll
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/bin/Debug/net8.0/working-good.business.core.pdb
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.csproj.AssemblyReference.cache
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.AssemblyInfoInputs.cache
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.AssemblyInfo.cs
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.csproj.CoreCompileInputs.cache
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.sourcelink.json
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.csproj.CopyComplete
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.dll
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/refint/working-good.business.application.dll
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/working-good.business.application.pdb
+/Users/tomaszkrasienko/Documents/GitRepositories/WorkingGood.Apps/working-good.business/src/working-good.business.application/obj/Debug/net8.0/ref/working-good.business.application.dll

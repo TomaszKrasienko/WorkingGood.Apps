@@ -16,6 +16,7 @@
     <ItemGroup>
       <ProjectReference Include="..\working-good.business.application\working-good.business.application.csproj" />
       <ProjectReference Include="..\working-good.business.core\working-good.business.core.csproj" />
+      <ProjectReference Include="..\working-good.business.infrastructure\working-good.business.infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

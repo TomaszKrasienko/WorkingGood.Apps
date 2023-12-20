@@ -89,7 +89,7 @@ public sealed class SignInCommandHandlerTests
     }
     
     [Fact]
-    public async Task Handle_ForInvalidPassword_ShouldThrowInvalidPasswordException()
+    public async Task Handle_ForInvalidPassword_ShouldThrowIncorrectPasswordException()
     {
         //arrange
         string token = "newAccessToken";
@@ -110,7 +110,7 @@ public sealed class SignInCommandHandlerTests
             => await _handler.HandleAsync(command, default));
         
         //assert
-        exception.Should().BeOfType<InvalidPasswordException>();
+        exception.Should().BeOfType<IncorrectPasswordException>();
     }
     
     #region arrange
@@ -129,7 +129,8 @@ public sealed class SignInCommandHandlerTests
         _mockPasswordManager = new Mock<IPasswordManager>();
         _mockAuthenticator = new Mock<IAuthenticator>();
         _mockAccessTokenStorage = new Mock<IAccessTokenStorage>();
-        _handler = new SignInCommandHandler(_mockUserRepository.Object, _mockAuthenticator.Object, _mockAccessTokenStorage.Object);
+        _handler = new SignInCommandHandler(_mockUserRepository.Object, _mockAuthenticator.Object, 
+            _mockAccessTokenStorage.Object, _mockPasswordManager.Object);
         _mockPasswordManager
             .Setup(f => f.Secure(It.IsAny<string>()))
             .Returns("securedPassword");

@@ -1,15 +1,19 @@
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.Exceptions;
 using working_good.business.application.Services;
+using working_good.business.core.Abstractions;
 using working_good.business.core.Abstractions.Repositories;
+using InvalidPasswordException = working_good.business.core.Exceptions.InvalidPasswordException;
 
 namespace working_good.business.application.CQRS.Users.Command.SignIn;
 
-internal sealed class SignInCommandHandler(IUserRepository userRepository, IAuthenticator authenticator, IAccessTokenStorage accessTokenStorage) : ICommandHandler<SignInCommand>
+internal sealed class SignInCommandHandler(IUserRepository userRepository, IAuthenticator authenticator, 
+    IAccessTokenStorage accessTokenStorage, IPasswordManager passwordManager) : ICommandHandler<SignInCommand>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IAuthenticator _authenticator = authenticator;
     private readonly IAccessTokenStorage _accessTokenStorage = accessTokenStorage;
+    private readonly IPasswordManager _passwordManager = passwordManager;
 
     public async Task HandleAsync(SignInCommand command, CancellationToken token)
     {
@@ -18,13 +22,15 @@ internal sealed class SignInCommandHandler(IUserRepository userRepository, IAuth
         {
             throw new UserNotFoundException(command.Email, "user_not_found");
         }
-
         if (!user.CanBeLogged())
         {
             throw new UserCanNotBeLoggedException(command.Email, "user_can_be_logged");
         }
-        
-        
+
+        if (!_passwordManager.IsValidPassword(command.Password, user.Password))
+        {
+            throw new IncorrectPasswordException(user.Id.Value.ToString(), "incorrect_password");
+        }
         var accessToken = _authenticator.CreateAccessToken(user.Id, new List<string>() { user.Role });
         _accessTokenStorage.Set(accessToken);
     }

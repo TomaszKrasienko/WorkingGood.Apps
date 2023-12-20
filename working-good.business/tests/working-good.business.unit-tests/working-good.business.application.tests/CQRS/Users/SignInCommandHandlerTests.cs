@@ -31,7 +31,7 @@ public sealed class SignInCommandHandlerTests
                 _user.Role
             }))
             .Returns(new AccessTokenDto(token));
-        
+        _user.VerifyAccount(_user.VerificationToken.Token);
         //act
         await _handler.HandleAsync(command, default);
         

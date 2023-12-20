@@ -19,7 +19,7 @@ internal sealed class SignInCommandHandler(IUserRepository userRepository, IAuth
             throw new UserNotFoundException(command.Email, "user_not_found");
         }
 
-        if (user.CanBeLogged())
+        if (!user.CanBeLogged())
         {
             throw new UserCanNotBeLoggedException(command.Email, "user_can_be_logged");
         }

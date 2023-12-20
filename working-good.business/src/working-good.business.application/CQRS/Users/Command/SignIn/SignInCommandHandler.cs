@@ -1,4 +1,5 @@
 using working_good.business.application.CQRS.Abstractions;
+using working_good.business.application.Exceptions;
 using working_good.business.application.Services;
 using working_good.business.core.Abstractions.Repositories;
 
@@ -13,6 +14,10 @@ internal sealed class SignInCommandHandler(IUserRepository userRepository, IAuth
     public async Task HandleAsync(SignInCommand command, CancellationToken token)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email);
+        if (user is null)
+        {
+            throw new UserNotFoundException(command.Email, "user_not_found");
+        }
         var accessToken = _authenticator.CreateAccessToken(user.Id, new List<string>() { user.Role });
         _accessTokenStorage.Set(accessToken);
     }

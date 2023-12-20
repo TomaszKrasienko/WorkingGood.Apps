@@ -64,6 +64,8 @@ public sealed class SignInCommandHandlerTests
         exception.Should().BeOfType<UserNotFoundException>();
     }
     
+    
+    
     #region arrange
     
     private readonly Mock<IUserRepository> _mockUserRepository;

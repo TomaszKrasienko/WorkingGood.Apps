@@ -19,9 +19,5 @@
     <ItemGroup>
         <InternalsVisibleTo Include="working-good.business.application.tests"/>
     </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Services\Security\" />
-    </ItemGroup>
 
 </Project>

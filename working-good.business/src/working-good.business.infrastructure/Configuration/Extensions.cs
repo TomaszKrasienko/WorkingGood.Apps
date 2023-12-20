@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using working_good.business.application.Services;
 using working_good.business.core.Abstractions;
 using working_good.business.core.Models;
 using working_good.business.infrastructure.Configuration.Models;
 using working_good.business.infrastructure.DAL.Configuration;
 using working_good.business.infrastructure.Exceptions;
 using working_good.business.infrastructure.Services;
+using working_good.business.infrastructure.Services.Security;
+using working_good.business.infrastructure.Services.Security.Configuration;
 
 namespace working_good.business.infrastructure.Configuration;
 
@@ -17,6 +20,7 @@ public static class Extensions
     public static IServiceCollection SetInfrastructureConfiguration(this IServiceCollection services, IConfiguration configuration)
         => services
             .SetDalConfiguration(configuration)
+            .SetSecurityConfiguration(configuration)
             .SetServices()
             .SetMiddlewares()
             .SetBanner(configuration);

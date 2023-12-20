@@ -65,7 +65,7 @@ public sealed class SignInCommandHandlerTests
     }
     
     [Fact]
-    public async Task Handle_ForValidCredentialsAndNonActiveUser_ShouldThrowUserNotActiveException()
+    public async Task Handle_ForValidCredentialsAndFalseCanBeLoggedUser_ShouldThrowUserCanNotBeLoggedException()
     {
         //arrange
         string token = "newAccessToken";
@@ -85,7 +85,7 @@ public sealed class SignInCommandHandlerTests
             => await _handler.HandleAsync(command, default));
         
         //assert
-        exception.Should().BeOfType<UserNotActiveException>();
+        exception.Should().BeOfType<UserCanNotBeLoggedException>();
     }
     
     #region arrange

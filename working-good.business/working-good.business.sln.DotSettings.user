@@ -6,5 +6,6 @@
     &lt;TestId&gt;xUnit::65223E03-1027-4565-9DEC-7BA5CA763EC3::net8.0::working_good.business.application.tests.CQRS.Users.SignUpCommandHandlerTests&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::65223E03-1027-4565-9DEC-7BA5CA763EC3::net8.0::working_good.business.application.tests.CQRS.Users.SignInCommandHandlerTests.Handle_ForValidCredentialsAndActiveUser_ShouldSetTokenToStorage&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::65223E03-1027-4565-9DEC-7BA5CA763EC3::net8.0::working_good.business.application.tests.CQRS.Users.SignInCommandHandlerTests.Handle_ForNonExistingUser_ShouldThrowUserNotFoundException&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::65223E03-1027-4565-9DEC-7BA5CA763EC3::net8.0::working_good.business.application.tests.CQRS.Users.SignInCommandHandlerTests.Handle_ForValidCredentialsAndNonActiveUser_ShouldThrowUserNotActiveException&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

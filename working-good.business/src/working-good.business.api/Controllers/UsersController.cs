@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using working_good.business.application.CQRS.Abstractions;
+using working_good.business.application.CQRS.Users.Command.SignIn;
 using working_good.business.application.CQRS.Users.Command.SignUp;
 using working_good.business.application.CQRS.Users.Queries.GetAvailableResources;
+using working_good.business.application.DTOs;
+using working_good.business.application.Services;
 
 namespace working_good.business.api.Controllers;
 
@@ -9,7 +12,9 @@ namespace working_good.business.api.Controllers;
 [ApiController]
 public sealed class UsersController(
     ICommandHandler<SignUpCommand> signUpCommandHandler,
-    IQueryHandler<GetAvailableUserRolesQuery, List<string>> userRolesHandler)
+    ICommandHandler<SignInCommand> signInCommandHandler,
+    IQueryHandler<GetAvailableUserRolesQuery, List<string>> userRolesHandler,
+    IAccessTokenStorage accessTokenStorage)
     : ControllerBase
 {
     [HttpGet("get-available-roles")]
@@ -25,5 +30,11 @@ public sealed class UsersController(
         await signUpCommandHandler.HandleAsync(command with { Id = Guid.NewGuid() }, cancellationToken);
         return Created();
     }
-    
+
+    [HttpPost("sign-in")]
+    public async Task<ActionResult<AccessTokenDto>> SignIn(SignInCommand command, CancellationToken cancellationToken)
+    {
+        await signInCommandHandler.HandleAsync(command, cancellationToken);
+        return Ok(accessTokenStorage.Get());
+    }
 }

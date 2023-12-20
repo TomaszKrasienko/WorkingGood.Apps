@@ -9,7 +9,9 @@ internal static class Extensions
 {
     internal static IServiceCollection SetSecurityConfiguration(this IServiceCollection services,
         IConfiguration configuration)
-        => services;
+        => services
+            .SetServices()
+            .SetOptions(configuration);
     
     private static IServiceCollection SetServices(this IServiceCollection services)
         => services

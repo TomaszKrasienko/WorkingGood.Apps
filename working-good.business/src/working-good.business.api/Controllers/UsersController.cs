@@ -44,6 +44,7 @@ public sealed class UsersController(
     public async Task<ActionResult<AccessTokenDto>> SignIn(SignInCommand command, CancellationToken cancellationToken)
     {
         await signInCommandHandler.HandleAsync(command, cancellationToken);
-        return Ok(accessTokenStorage.Get());
+        var accessToken = accessTokenStorage.Get();
+        return Ok(accessToken);
     }
 }

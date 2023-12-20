@@ -25,5 +25,6 @@ internal sealed class SignUpCommandHandler(IUserRepository userRepository, IPass
         var user = User.CreateUser(_passwordPolicy, _passwordManager, command.Id, command.Email,
             new FullName(command.FirstName, command.LastName), command.Password, command.Role);
         await _userRepository.AddAsync(user);
+        Console.WriteLine(user.VerificationToken.Token);
     }
 }

@@ -15,6 +15,7 @@ internal static class Extensions
     
     private static IServiceCollection SetServices(this IServiceCollection services)
         => services
+            .AddHttpContextAccessor()
             .AddSingleton<IAccessTokenStorage, HttpContextTokenStorage>()
             .AddSingleton<IAuthenticator, Authenticator>();
 

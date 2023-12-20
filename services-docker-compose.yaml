@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  wg-business:
+    container_name: wg-business
+    build: ./working-good.business
+    ports: 
+      - 30021:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=docker
+networks: 
+  default:
+    name: wg-network

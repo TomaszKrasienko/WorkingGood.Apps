@@ -11,4 +11,19 @@ internal sealed class HttpContextTokenStorage(IHttpContextAccessor httpContextAc
 
     public void Set(AccessTokenDto accessTokenDto)
         => _httpContextAccessor.HttpContext?.Items.TryAdd(accessTokenDto, TokenKey);
+
+    public AccessTokenDto Get()
+    {
+        if (_httpContextAccessor.HttpContext is null)
+        {
+            return null;
+        }
+
+        if (_httpContextAccessor.HttpContext.Items.TryGetValue(TokenKey, out var accessToken))
+        {
+            return accessToken as AccessTokenDto;
+        }
+
+        return null;
+    }
 }

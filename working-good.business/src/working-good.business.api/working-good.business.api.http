@@ -1,4 +1,4 @@
-@url = http://localhost:4001
+@url = https://localhost:4001
 
 ###
 GET {{url}}/users/get-available-roles
@@ -9,9 +9,9 @@ Content-Type: application/json
 
 {
   "Id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "Email": "string",
-  "FirstName": "string",
-  "LastName": "string",
-  "Password": "string",
-  "Role": "string"
+  "Email": "tomasz.krasienko@outlook.com",
+  "FirstName": "Tomasz",
+  "LastName": "Krasienko",
+  "Password": "Test123#",
+  "Role": "User"
 }

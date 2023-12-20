@@ -114,6 +114,75 @@ public sealed class UserTests
         //Assert
         exception.Should().BeOfType<ToWeakPasswordException>();
     }
+
+    [Fact]
+    public void VerifyAccount_ForValidVerificationToken_ShouldSetVerificationDate()
+    {
+        //Arrange
+        _passwordManagerMock
+            .Setup(f => f.Secure(It.IsAny<string>()))
+            .Returns("securedPassword");
+        var user = User.CreateUser(_passwordPolicy, _passwordManagerMock.Object, Guid.NewGuid(),
+            "test@test.pl", new FullName("testFirstName", "testLastName"), "Test123!", Role.Employee());
+        
+        //Act
+        user.VerifyAccount(user.VerificationToken.Token);
+        
+        //Assert
+        user.VerificationToken.VerificationDate.Should().NotBeNull();
+    }
+    
+    [Fact]
+    public void VerifyAccount_ForInvalidVerificationToken_ShouldThrowInvalidAccountVerificationException()
+    {
+        //Arrange
+        _passwordManagerMock
+            .Setup(f => f.Secure(It.IsAny<string>()))
+            .Returns("securedPassword");
+        var user = User.CreateUser(_passwordPolicy, _passwordManagerMock.Object, Guid.NewGuid(),
+            "test@test.pl", new FullName("testFirstName", "testLastName"), "Test123!", Role.Employee());
+        
+        //Act
+        var exception = Record.Exception(() => user.VerifyAccount("testInvalidToken"));
+        
+        //Assert
+        exception.Should().BeOfType<InvalidAccountVerificationException>();
+    }
+
+    [Fact]
+    public void CanBeLogged_ForActiveUser_ShouldReturnTrue()
+    {
+        //arrange
+        _passwordManagerMock
+            .Setup(f => f.Secure(It.IsAny<string>()))
+            .Returns("securedPassword");
+        var user = User.CreateUser(_passwordPolicy, _passwordManagerMock.Object, Guid.NewGuid(),
+            "test@test.pl", new FullName("testFirstName", "testLastName"), "Test123!", Role.Employee());
+        user.VerifyAccount(user.VerificationToken.Token);
+        
+        //act
+        var result = user.CanBeLogged();
+        
+        //assert
+        result.Should().BeTrue();
+    }
+    
+    [Fact]
+    public void CanBeLogged_ForNonActiveUser_ShouldReturnFalse()
+    {
+        //arrange
+        _passwordManagerMock
+            .Setup(f => f.Secure(It.IsAny<string>()))
+            .Returns("securedPassword");
+        var user = User.CreateUser(_passwordPolicy, _passwordManagerMock.Object, Guid.NewGuid(),
+            "test@test.pl", new FullName("testFirstName", "testLastName"), "Test123!", Role.Employee());
+        
+        //act
+        var result = user.CanBeLogged();
+        
+        //assert
+        result.Should().BeFalse();
+    }
     
     #region arrange
 

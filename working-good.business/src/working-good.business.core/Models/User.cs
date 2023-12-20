@@ -36,4 +36,11 @@ public class User : AggregateRoot
         string securedPassword = passwordManager.Secure(password);
         return new User(id, email, fullName, securedPassword, role);
     }
+
+    public void VerifyAccount(string token)
+        => VerificationToken.Verify(token);
+
+    public bool CanBeLogged()
+        => VerificationToken.VerificationDate is not null;
+
 }

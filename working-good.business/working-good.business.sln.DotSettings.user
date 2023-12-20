@@ -1,0 +1,10 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=440d0795_002D367f_002D495e_002Da334_002D4accacd2a538/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="VerifyAccount_ForInvalidVerificationToken_ShouldThrowInvalidAccountVerificationException" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::07DB01D5-99EF-42FF-B79E-11FB3E8DC5F4::net8.0::working_good.business.core.tests.Models.UserTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::65223E03-1027-4565-9DEC-7BA5CA763EC3::net8.0::working_good.business.application.tests.CQRS.Users.VerifyAccountCommandHandlerTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::65223E03-1027-4565-9DEC-7BA5CA763EC3::net8.0::working_good.business.application.tests.CQRS.Users.SignUpCommandHandlerTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::65223E03-1027-4565-9DEC-7BA5CA763EC3::net8.0::working_good.business.application.tests.CQRS.Users.SignInCommandHandlerTests.Handle_ForValidCredentialsAndActiveUser_ShouldSetTokenToStorage&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::65223E03-1027-4565-9DEC-7BA5CA763EC3::net8.0::working_good.business.application.tests.CQRS.Users.SignInCommandHandlerTests.Handle_ForNonExistingUser_ShouldThrowUserNotFoundException&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

@@ -7,27 +7,23 @@ namespace working_good.business.api.Controllers;
 
 [Route("users")]
 [ApiController]
-public class UsersController : ControllerBase
+public sealed class UsersController(
+    ICommandHandler<SignUpCommand> signUpCommandHandler,
+    IQueryHandler<GetAvailableUserRolesQuery, List<string>> userRolesHandler)
+    : ControllerBase
 {
-    private readonly ICommandHandler<SignUpCommand> _signUpCommandHandler;
-    private readonly IQueryHandler<GetAvailableUserRolesQuery, List<string>> _userRolesHandler;
-    public UsersController(ICommandHandler<SignUpCommand> signUpCommandHandler, 
-        IQueryHandler<GetAvailableUserRolesQuery, List<string>> userRolesHandler)
-    {
-        _signUpCommandHandler = signUpCommandHandler;
-        _userRolesHandler = userRolesHandler;
-    }
-    
     [HttpGet("get-available-roles")]
     public async Task<ActionResult<List<string>>> GetAvailableRoles(CancellationToken cancellationToken)
     {
-        var result = await _userRolesHandler.HandleAsync(new GetAvailableUserRolesQuery(), cancellationToken);
+        var result = await userRolesHandler.HandleAsync(new GetAvailableUserRolesQuery(), cancellationToken);
         return Ok(result);
     }
 
     [HttpPost("sign-up")]
-    public async Task<IActionResult> SignUp(SignUpCommand command)
+    public async Task<IActionResult> SignUp(SignUpCommand command, CancellationToken cancellationToken)
     {
-        return Ok();
+        await signUpCommandHandler.HandleAsync(command with { Id = Guid.NewGuid() }, cancellationToken);
+        return Created();
     }
+    
 }

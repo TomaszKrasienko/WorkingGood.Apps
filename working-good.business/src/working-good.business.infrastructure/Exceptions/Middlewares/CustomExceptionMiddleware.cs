@@ -23,8 +23,9 @@ internal sealed class CustomExceptionMiddleware(ILogger<CustomExceptionMiddlewar
     {
         var (statusCode, error) = exception switch
         {
-            CustomException => (StatusCodes.Status400BadRequest, new {Exception = exception.GetType().Name, Message = exception.Message}),
-            _ => (StatusCodes.Status500InternalServerError, new {Exception = "server error", Message = "There was an error"})
+            AuthorizeCustomException => (StatusCodes.Status400BadRequest, new {ExceptionCode = "authorize_exception", Message = "There was a problem during authorize"}),
+            CustomException customException => (StatusCodes.Status400BadRequest, new {ExceptionCode = customException.MessageCode, Message = customException.Message}),
+            _ => (StatusCodes.Status500InternalServerError, new {ExceptionCode = "server error", Message = "There was an error"})
         };
 
         context.Response.StatusCode = statusCode;

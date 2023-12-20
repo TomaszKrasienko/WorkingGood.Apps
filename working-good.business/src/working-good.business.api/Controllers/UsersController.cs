@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.CQRS.Users.Command.SignIn;
 using working_good.business.application.CQRS.Users.Command.SignUp;
+using working_good.business.application.CQRS.Users.Command.VerifyAccount;
 using working_good.business.application.CQRS.Users.Queries.GetAvailableResources;
 using working_good.business.application.DTOs;
 using working_good.business.application.Services;
@@ -13,6 +14,7 @@ namespace working_good.business.api.Controllers;
 public sealed class UsersController(
     ICommandHandler<SignUpCommand> signUpCommandHandler,
     ICommandHandler<SignInCommand> signInCommandHandler,
+    ICommandHandler<VerifyAccountCommand> verifyCommandHandler,
     IQueryHandler<GetAvailableUserRolesQuery, List<string>> userRolesHandler,
     IAccessTokenStorage accessTokenStorage)
     : ControllerBase
@@ -29,6 +31,13 @@ public sealed class UsersController(
     {
         await signUpCommandHandler.HandleAsync(command with { Id = Guid.NewGuid() }, cancellationToken);
         return Created();
+    }
+
+    [HttpPost("verify-account")]
+    public async Task<IActionResult> VerifyAccount(VerifyAccountCommand command, CancellationToken cancellationToken)
+    {
+        await verifyCommandHandler.HandleAsync(command, cancellationToken);
+        return Ok();
     }
 
     [HttpPost("sign-in")]

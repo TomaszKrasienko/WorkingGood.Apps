@@ -20,16 +20,16 @@ internal sealed class SignInCommandHandler(IUserRepository userRepository, IAuth
         var user = await _userRepository.GetByEmailAsync(command.Email);
         if (user is null)
         {
-            throw new UserNotFoundException(command.Email, "user_not_found");
+            throw new UserNotFoundException(command.Email);
         }
         if (!user.CanBeLogged())
         {
-            throw new UserCanNotBeLoggedException(command.Email, "user_can_be_logged");
+            throw new UserCanNotBeLoggedException(user.Id);
         }
 
         if (!_passwordManager.IsValidPassword(command.Password, user.Password))
         {
-            throw new IncorrectPasswordException(user.Id.Value.ToString(), "incorrect_password");
+            throw new IncorrectPasswordException(user.Id);
         }
         var accessToken = _authenticator.CreateAccessToken(user.Id, new List<string>() { user.Role });
         _accessTokenStorage.Set(accessToken);

@@ -88,6 +88,31 @@ public sealed class SignInCommandHandlerTests
         exception.Should().BeOfType<UserCanNotBeLoggedException>();
     }
     
+    [Fact]
+    public async Task Handle_ForInvalidPassword_ShouldThrowInvalidPasswordException()
+    {
+        //arrange
+        string token = "newAccessToken";
+        var command = new SignInCommand(_user.Email.Value, "RandomStrongPassword");
+        _mockUserRepository
+            .Setup(f => f.GetByEmailAsync(It.Is<string>(arg => arg == command.Email)))
+            .ReturnsAsync(_user);
+        _mockAuthenticator
+            .Setup(f => f.CreateAccessToken(_user.Id, new List<string>()
+            {
+                _user.Role
+            }))
+            .Returns(new AccessTokenDto(token));
+        _user.VerifyAccount(_user.VerificationToken.Token);
+        
+        //act
+        var exception = await Record.ExceptionAsync(async() 
+            => await _handler.HandleAsync(command, default));
+        
+        //assert
+        exception.Should().BeOfType<InvalidPasswordException>();
+    }
+    
     #region arrange
     
     private readonly Mock<IUserRepository> _mockUserRepository;

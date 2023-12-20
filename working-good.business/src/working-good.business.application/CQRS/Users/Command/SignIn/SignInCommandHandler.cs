@@ -23,6 +23,8 @@ internal sealed class SignInCommandHandler(IUserRepository userRepository, IAuth
         {
             throw new UserCanNotBeLoggedException(command.Email, "user_can_be_logged");
         }
+        
+        
         var accessToken = _authenticator.CreateAccessToken(user.Id, new List<string>() { user.Role });
         _accessTokenStorage.Set(accessToken);
     }

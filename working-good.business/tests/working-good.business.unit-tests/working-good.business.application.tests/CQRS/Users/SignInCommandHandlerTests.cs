@@ -64,7 +64,29 @@ public sealed class SignInCommandHandlerTests
         exception.Should().BeOfType<UserNotFoundException>();
     }
     
-    
+    [Fact]
+    public async Task Handle_ForValidCredentialsAndNonActiveUser_ShouldThrowUserNotActiveException()
+    {
+        //arrange
+        string token = "newAccessToken";
+        var command = new SignInCommand(_user.Email.Value, _userPassword);
+        _mockUserRepository
+            .Setup(f => f.GetByEmailAsync(It.Is<string>(arg => arg == command.Email)))
+            .ReturnsAsync(_user);
+        _mockAuthenticator
+            .Setup(f => f.CreateAccessToken(_user.Id, new List<string>()
+            {
+                _user.Role
+            }))
+            .Returns(new AccessTokenDto(token));
+        
+        //act
+        var exception = await Record.ExceptionAsync(async() 
+            => await _handler.HandleAsync(command, default));
+        
+        //assert
+        exception.Should().BeOfType<UserNotActiveException>();
+    }
     
     #region arrange
     

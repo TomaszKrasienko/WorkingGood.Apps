@@ -23,7 +23,8 @@ public static class Extensions
             .SetSecurityConfiguration(configuration)
             .SetServices()
             .SetMiddlewares()
-            .SetBanner(configuration);
+            .SetBanner(configuration)
+            .SetCorsPolicy(configuration);
 
     private static IServiceCollection SetServices(this IServiceCollection services)
         => services

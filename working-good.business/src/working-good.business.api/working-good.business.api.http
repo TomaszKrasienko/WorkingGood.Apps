@@ -1,4 +1,7 @@
-@url = https://localhost:4001
+# @url = https://localhost:4001
+@url = http://localhost:30021
+@email = tomasz.krasienko@outlook.com
+@password = Test123#
 
 ###
 GET {{url}}/users/get-available-roles
@@ -8,10 +11,27 @@ POST {{url}}/users/sign-up
 Content-Type: application/json
 
 {
-  "Id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "Email": "tomasz.krasienko@outlook.com",
-  "FirstName": "Tomasz",
-  "LastName": "Krasienko",
-  "Password": "Test123#",
-  "Role": "User"
+  "email": "{{email}}",
+  "firstName": "Tomasz",
+  "lastName": "Krasienko",
+  "password": "{{password}}",
+  "role": "User"
+}
+
+###
+POST {{url}}/users/verify-account
+Content-Type: application/json
+
+{
+  "verificationToken":"jcTXtru8nVXeCzvDcF9OnfUm3nJSN0MZtDfH1B7ocBSfKIMEA70iT5aaEe5Ct+K55jKUGytzz6KO0QOcC8qg"
+}
+
+
+###
+POST {{url}}/users/sign-in
+Content-Type: application/json
+
+{
+  "email":"{{email}}",
+  "password":"{{password}}"
 }

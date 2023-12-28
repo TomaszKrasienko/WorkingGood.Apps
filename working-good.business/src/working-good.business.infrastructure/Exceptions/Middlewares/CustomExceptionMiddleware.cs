@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using working_good.business.core.Exceptions;
 
-namespace working_good.business.infrastructure.Exceptions;
+namespace working_good.business.infrastructure.Exceptions.Middlewares;
 
 internal sealed class CustomExceptionMiddleware(ILogger<CustomExceptionMiddleware> logger) : IMiddleware
 {

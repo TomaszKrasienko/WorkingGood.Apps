@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using working_good.business.core.Abstractions;
 using working_good.business.core.Models;
+using working_good.business.core.Models.Company;
 
 namespace working_good.business.infrastructure.Services;
 

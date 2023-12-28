@@ -13,5 +13,5 @@ internal static class Extensions
             .SetServices();
 
     private static IServiceCollection SetServices(this IServiceCollection services)
-        => services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+        => services.AddSingleton<ICompanyRepository, InMemoryCompanyRepository>();
 }

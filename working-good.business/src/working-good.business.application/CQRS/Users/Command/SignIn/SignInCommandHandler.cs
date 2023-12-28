@@ -7,31 +7,28 @@ using InvalidPasswordException = working_good.business.core.Exceptions.InvalidPa
 
 namespace working_good.business.application.CQRS.Users.Command.SignIn;
 
-internal sealed class SignInCommandHandler(IUserRepository userRepository, IAuthenticator authenticator, 
+internal sealed class SignInCommandHandler(ICompanyRepository companyRepository, IAuthenticator authenticator, 
     IAccessTokenStorage accessTokenStorage, IPasswordManager passwordManager) : ICommandHandler<SignInCommand>
 {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IAuthenticator _authenticator = authenticator;
-    private readonly IAccessTokenStorage _accessTokenStorage = accessTokenStorage;
-    private readonly IPasswordManager _passwordManager = passwordManager;
 
     public async Task HandleAsync(SignInCommand command, CancellationToken token)
     {
-        var user = await _userRepository.GetByEmailAsync(command.Email);
-        if (user is null)
+        var company = await companyRepository.GetByUserEmailAsync(command.Email);
+        if (company is null)
         {
             throw new UserNotFoundException(command.Email);
         }
-        if (!user.CanBeLogged())
+        if (!company.CanUserBeLogged(command.Email))
         {
-            throw new UserCanNotBeLoggedException(user.Id);
+            throw new UserCanNotBeLoggedException(command.Email);
         }
 
-        if (!_passwordManager.IsValidPassword(command.Password, user.Password))
+        var user = company.Users.Single(x => x.Email == command.Email);
+        if (!passwordManager.IsValidPassword(command.Password, user.Password))
         {
             throw new IncorrectPasswordException(user.Id);
         }
-        var accessToken = _authenticator.CreateAccessToken(user.Id, new List<string>() { user.Role });
-        _accessTokenStorage.Set(accessToken);
+        var accessToken = authenticator.CreateAccessToken(user.Id, new List<string>() { user.Role });
+        accessTokenStorage.Set(accessToken);
     }
 }

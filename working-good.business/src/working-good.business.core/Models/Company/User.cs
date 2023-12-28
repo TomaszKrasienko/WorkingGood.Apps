@@ -4,9 +4,9 @@ using working_good.business.core.Exceptions;
 using working_good.business.core.Policies.Abstractions;
 using working_good.business.core.ValueObjects.User;
 
-namespace working_good.business.core.Models;
+namespace working_good.business.core.Models.Company;
 
-public class User : AggregateRoot
+public sealed class User : Entity
 {
     public Email Email { get; private set; }
     public Password Password { get; private set; }
@@ -28,7 +28,7 @@ public class User : AggregateRoot
         _events.Add(new UserAdded(id, email, VerificationToken.Token));
     }
     
-    public static User CreateUser(IPasswordPolicy userPasswordPolicy, IPasswordManager passwordManager, Guid id,
+    internal static User CreateUser(IPasswordPolicy userPasswordPolicy, IPasswordManager passwordManager, Guid id,
         Email email, FullName fullName, Password password, Role role)
     {
         if (!(userPasswordPolicy.VerifyPassword(password)))
@@ -37,10 +37,10 @@ public class User : AggregateRoot
         return new User(id, email, fullName, securedPassword, role);
     }
 
-    public void VerifyAccount(string token)
+    internal void VerifyAccount(string token)
         => VerificationToken.Verify(token);
 
-    public bool CanBeLogged()
+    internal bool CanBeLogged()
         => VerificationToken.VerificationDate is not null;
 
 }

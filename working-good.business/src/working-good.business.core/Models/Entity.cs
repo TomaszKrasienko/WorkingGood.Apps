@@ -2,12 +2,7 @@ using working_good.business.core.ValueObjects;
 
 namespace working_good.business.core.Models;
 
-internal class Entity
+public abstract class Entity(EntityId id)
 {
-    public EntityId Id { get; }
-
-    protected Entity(EntityId id)
-    {
-        Id = id;
-    }
+    public EntityId Id { get; } = id;
 }

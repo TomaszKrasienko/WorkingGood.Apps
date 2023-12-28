@@ -20,8 +20,6 @@ public sealed record VerificationToken
 
     internal void Verify(string value)
     {
-        if (Token != value)
-            throw new InvalidAccountVerificationException();
         VerificationDate = DateTime.Now;
     }
 }

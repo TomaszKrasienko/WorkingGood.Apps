@@ -24,10 +24,10 @@ public sealed class Company : AggregateRoot
         EmailDomain = emailDomain;
     }
 
-    public static Company CreateOwnerCompany(EntityId entityId, Name name, EmailDomain emailDomain)
+    internal static Company CreateOwnerCompany(EntityId entityId, Name name, EmailDomain emailDomain)
         => new Company(entityId, name, true, null, emailDomain);
 
-    public static Company CreateCompany(EntityId entityId, Name name, SlaTimeSpan slaTimeSpan,
+    internal static Company CreateCompany(EntityId entityId, Name name, SlaTimeSpan slaTimeSpan,
         EmailDomain emailDomain)
         => new Company(entityId, name, false, slaTimeSpan, emailDomain);
 

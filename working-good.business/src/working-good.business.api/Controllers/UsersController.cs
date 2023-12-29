@@ -26,10 +26,14 @@ public sealed class UsersController(
         return Ok(result);
     }
 
-    [HttpPost("sign-up")]
-    public async Task<IActionResult> SignUp(SignUpCommand command, CancellationToken cancellationToken)
+    [HttpPost("{companyId:guid}/sign-up")]
+    public async Task<IActionResult> SignUp(Guid companyId, SignUpCommand command, CancellationToken cancellationToken)
     {
-        await signUpCommandHandler.HandleAsync(command with { Id = Guid.NewGuid() }, cancellationToken);
+        await signUpCommandHandler.HandleAsync(command with
+        {
+            Id = Guid.NewGuid(), 
+            CompanyId = companyId
+        }, cancellationToken);
         return Created();
     }
 

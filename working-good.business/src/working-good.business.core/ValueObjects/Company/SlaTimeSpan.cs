@@ -14,6 +14,6 @@ public sealed record SlaTimeSpan
     public static implicit operator SlaTimeSpan(TimeSpan value)
         => new SlaTimeSpan(value);
 
-    public static implicit operator TimeSpan(SlaTimeSpan slaTimeSpan)
-        => slaTimeSpan.Value;
+    public static implicit operator TimeSpan?(SlaTimeSpan slaTimeSpan)
+        => slaTimeSpan?.Value;
 }

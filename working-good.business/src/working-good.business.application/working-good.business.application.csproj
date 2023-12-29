@@ -4,7 +4,6 @@
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>working_good.business.application</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

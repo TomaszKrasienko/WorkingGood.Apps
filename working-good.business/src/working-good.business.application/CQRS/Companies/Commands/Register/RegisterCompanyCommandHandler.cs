@@ -15,8 +15,11 @@ internal sealed class RegisterCompanyCommandHandler : ICommandHandler<RegisterCo
         _companyRepository = companyRepository;
     }
 
-    public Task HandleAsync(RegisterCompanyCommand command, CancellationToken token)
+    public async Task HandleAsync(RegisterCompanyCommand command, CancellationToken token)
     {
-        throw new NotImplementedException();
+        var companies = await _companyRepository.GetAllAsync();
+        var company = _companyRegistrationService.RegisterCompany(companies, command.Id, command.Name,
+            command.IsOwner, command.EmailDomain, command.SlaTimeSpan);
+        await _companyRepository.AddAsync(company);
     }
 }

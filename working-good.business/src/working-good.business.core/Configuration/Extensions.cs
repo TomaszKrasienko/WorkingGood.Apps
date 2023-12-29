@@ -15,6 +15,7 @@ public static class Extensions
     private static IServiceCollection SetPolicies(this IServiceCollection services)
         => services
             .AddSingleton<IPasswordPolicy, UserPasswordPolicy>()
-            .AddSingleton<IUserRegistrationService, UserRegistrationService>();
+            .AddSingleton<IUserRegistrationService, UserRegistrationService>()
+            .AddSingleton<ICompanyRegistrationService, CompanyRegistrationService>();
 
 }

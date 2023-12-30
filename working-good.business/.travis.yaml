@@ -1,0 +1,10 @@
+language: csharp
+mono: none
+dotnet: 8.0.100
+
+branches:
+ - only:
+   - master
+
+before_script:
+  - dotnet restore

@@ -1,17 +1,39 @@
-# @url = https://localhost:4001
-@url = http://localhost:30021
+@url = https://localhost:4001
+# @url = http://localhost:30021
 @email = tomasz.krasienko@outlook.com
 @password = Test123#
+@companyId = 78746a16-8ac2-4ad9-9ac8-b069a593b271
+@employeeId = 2094202a-7a20-4869-bc27-dd7a03a6f8bd
+
+###
+GET {{url}}/companies/{{companyId}}
 
 ###
 GET {{url}}/users/get-available-roles
 
 ###
-POST {{url}}/users/sign-up
+POST {{url}}/companies/register-company
 Content-Type: application/json
 
 {
-  "email": "{{email}}",
+  "name": "OwnerCompany",
+  "isOwner": true,
+  "emailDomain": "outlook.com"
+}
+
+###
+POST {{url}}/companies/{{companyId}}/add-employee
+Content-Type: application/json
+
+{
+  "email":"test@outlook.com" 
+}
+
+###
+POST {{url}}/companies/employees/{{employeeId}}/sign-up
+Content-Type: application/json
+
+{
   "firstName": "Tomasz",
   "lastName": "Krasienko",
   "password": "{{password}}",
@@ -19,19 +41,19 @@ Content-Type: application/json
 }
 
 ###
-POST {{url}}/users/verify-account
+POST {{url}}/companies/employees/users/verify-account
 Content-Type: application/json
 
 {
-  "verificationToken":"jcTXtru8nVXeCzvDcF9OnfUm3nJSN0MZtDfH1B7ocBSfKIMEA70iT5aaEe5Ct+K55jKUGytzz6KO0QOcC8qg"
+  "verificationToken":"NXPavfl5G5rRZJOlkAqH5xuotisWpXqOonvG4MGrMwRVfVM0yJkzh31MwW8hgi3O5Gf3V7tydq3k8RBB0UA9g"
 }
 
 
 ###
-POST {{url}}/users/sign-in
+POST {{url}}/companies/employees/users/sign-in
 Content-Type: application/json
 
 {
-  "email":"{{email}}",
+  "email":"test@outlook.com",
   "password":"{{password}}"
 }

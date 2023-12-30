@@ -1,6 +1,8 @@
 using working_good.business.core.Abstractions;
+using working_good.business.core.Exceptions;
 using working_good.business.core.Policies.Abstractions;
 using working_good.business.core.ValueObjects;
+using working_good.business.core.ValueObjects.Company;
 using working_good.business.core.ValueObjects.User;
 
 namespace working_good.business.core.Models.Company;
@@ -11,8 +13,8 @@ public sealed class Company : AggregateRoot
     public IsOwner IsOwner { get; private set; }
     public SlaTimeSpan SlaTimeSpan { get; private set; }
     public EmailDomain EmailDomain { get; private set; }
-    private ISet<User> _users = new HashSet<User>();
-    public IEnumerable<User> Users => _users;
+    private ISet<Employee> _employees = new HashSet<Employee>();
+    public IEnumerable<Employee> Employees => _employees;
     
     private Company(EntityId entityId, Name name, IsOwner isOwner, SlaTimeSpan slaTimeSpan,
         EmailDomain emailDomain) 
@@ -31,31 +33,43 @@ public sealed class Company : AggregateRoot
         EmailDomain emailDomain)
         => new Company(entityId, name, false, slaTimeSpan, emailDomain);
 
-    internal User RegisterUser(IPasswordPolicy userPasswordPolicy, IPasswordManager passwordManager, Guid id,
-        Email email, FullName fullName, Password password, Role role)
+    public void AddEmployee(EntityId guid, Email email)
     {
-        string userDomain = email.Value.Substring(email.Value.IndexOf("@", StringComparison.Ordinal) + 1);
-        
-        if (userDomain != EmailDomain.Value)
+        if (_employees.Any(x => x.Email == email))
         {
-            throw new InvalidUserEmailDomainException(EmailDomain);
+            throw new EmailAlreadyInUseException(email);
         }
-        var user = User.CreateUser(userPasswordPolicy, passwordManager, id, email, fullName, password, role);
-        _users.Add(user);
-        return user;
+        string employeeDomain = email.Value.Substring(email.Value.IndexOf("@", StringComparison.Ordinal) + 1);
+        
+        if (employeeDomain != EmailDomain.Value)
+        {
+            throw new NotMatchingEmployeeEmailDomainException(EmailDomain);
+        }
+        _employees.Add(new Employee(guid, email));
+    }
+    
+    internal void RegisterUser(IPasswordPolicy userPasswordPolicy, IPasswordManager passwordManager, EntityId employeeId, 
+        EntityId id, FullName fullName, Password password, Role role)
+    {
+        var employee = _employees.FirstOrDefault(x => x.Id.Equals(employeeId));
+        if (employee is null)
+        {
+            throw new EmployeeDoesNotExistException(employeeId);
+        }
+
+        var user = User.CreateUser(userPasswordPolicy, passwordManager, id, fullName, password, role);
+        employee.User = user;
     }
 
     public void VerifyUser(string token)
     {
-        var user = _users.Single(x => x.VerificationToken.Token == token);
-        user.VerifyAccount(token);
+        var employee = _employees.Single(x => x.User.VerificationToken.Token == token);
+        employee.User.VerifyAccount(token);
     }
 
-    public bool CanUserBeLogged(string userEmail)
+    public bool CanUserBeLogged(string email)
     {
-        var user = _users.Single(x => x.Email == userEmail);
-        return user.CanBeLogged();
+        var employee = _employees.Single(x => x.Email == email);
+        return employee.User is not null && employee.User.CanBeLogged();
     }
-    
-    
 }

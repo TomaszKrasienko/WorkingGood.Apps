@@ -1,6 +1,4 @@
-using working_good.business.core.Exceptions;
-
-namespace working_good.business.core.Models.Company;
+namespace working_good.business.core.Exceptions;
 
 public sealed class InvalidNameException : CustomException
 {

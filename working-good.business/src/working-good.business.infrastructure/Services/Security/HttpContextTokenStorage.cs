@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using working_good.business.application.DTOs;
 using working_good.business.application.Services;
+using working_good.business.application.Services.Security;
 
 namespace working_good.business.infrastructure.Services.Security;
 

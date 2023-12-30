@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using working_good.business.application.DTOs;
 using working_good.business.application.Services;
+using working_good.business.application.Services.Security;
 using working_good.business.infrastructure.Services.Security.Configuration.Models;
 
 namespace working_good.business.infrastructure.Services.Security;

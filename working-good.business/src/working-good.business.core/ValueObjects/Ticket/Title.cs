@@ -1,3 +1,5 @@
+using working_good.business.core.Exceptions;
+
 namespace working_good.business.core.ValueObjects.Ticket;
 
 public record Title

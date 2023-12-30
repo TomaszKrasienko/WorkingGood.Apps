@@ -44,7 +44,7 @@ public sealed class RegisterCompanyCommandHandlerTests
             .Setup(f => f.GetAllAsync())
             .ReturnsAsync(companies);
         var command = new RegisterCompanyCommand(Guid.NewGuid(), "newCompany", false,
-            "test.pl", TimeSpan.FromDays(1));
+            "newtest.pl", TimeSpan.FromDays(1));
 
         //act
         await _handler.HandleAsync(command, default);

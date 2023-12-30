@@ -1,4 +1,4 @@
-namespace working_good.business.core.Models.Company;
+namespace working_good.business.core.ValueObjects.Company;
 
 public sealed record IsOwner(bool Value)
 {

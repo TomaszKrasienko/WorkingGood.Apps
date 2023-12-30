@@ -4,14 +4,8 @@ namespace working_good.business.core.ValueObjects.User;
 
 public sealed record ResetPasswordToken
 {
-    public string? Token { get; }
+    public string Token { get; }
     public DateTime? Expiry { get; }
-
-    private ResetPasswordToken()
-    {
-        
-    }
-    
     private ResetPasswordToken(DateTime expiry)
     {
         Expiry = expiry;

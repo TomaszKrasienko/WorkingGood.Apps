@@ -15,12 +15,13 @@ internal sealed class InMemoryCompanyRepository : ICompanyRepository
 
     public Task<Company> GetByUserEmailAsync(string email)
         => Task.FromResult(_companies.FirstOrDefault(x
-            => x.Users.Any(arg => arg.Email == email)));
+            => x.Employees.Any(arg => arg.Email == email)));
     
-
     public Task<Company> GetByUserVerificationTokenAsync(string verificationToken)
         => Task.FromResult(_companies.FirstOrDefault(x
-            => x.Users.Any(arg => arg.VerificationToken.Token == verificationToken)));
+            => x.Employees.Any(arg 
+                => arg.User != null 
+                && arg.User.VerificationToken.Token == verificationToken)));
 
     public Task AddAsync(Company company)
     {

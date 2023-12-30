@@ -1,4 +1,6 @@
-namespace working_good.business.core.Models.Company;
+using working_good.business.core.Exceptions;
+
+namespace working_good.business.core.ValueObjects.Company;
 
 public sealed record SlaTimeSpan
 {

@@ -5,6 +5,7 @@ using working_good.business.application.CQRS.Users.Command.VerifyAccount;
 using working_good.business.application.DTOs;
 using working_good.business.application.Exceptions;
 using working_good.business.application.Services;
+using working_good.business.application.Services.Security;
 using working_good.business.core.Abstractions;
 using working_good.business.core.Abstractions.Repositories;
 using working_good.business.core.DomainServices;
@@ -23,17 +24,17 @@ public sealed class SignInCommandHandlerTests
     {
         //arrange
         string token = "newAccessToken";
-        var command = new SignInCommand(_company.Users.Single().Email.Value, _userPassword);
+        var command = new SignInCommand(_company.Employees.Single().Email.Value, _userPassword);
         _mockCompanyRepository
             .Setup(f => f.GetByUserEmailAsync(It.Is<string>(arg => arg == command.Email)))
             .ReturnsAsync(_company);
         _mockAuthenticator
-            .Setup(f => f.CreateAccessToken(_company.Users.Single().Id, new List<string>()
+            .Setup(f => f.CreateAccessToken(_company.Employees.Single().User.Id, new List<string>()
             {
-                _company.Users.Single().Role
+                _company.Employees.Single().User.Role
             }))
             .Returns(new AccessTokenDto(token));
-        _company.VerifyUser(_company.Users.Single().VerificationToken.Token);
+        _company.VerifyUser(_company.Employees.Single().User.VerificationToken.Token);
         //act
         await _handler.HandleAsync(command, default);
         
@@ -47,16 +48,9 @@ public sealed class SignInCommandHandlerTests
     public async Task Handle_ForNonExistingUser_ShouldThrowUserNotFoundException()
     {
         //arrange
-        string token = "newAccessToken";
-        var command = new SignInCommand(_company.Users.Single().Email.Value, _userPassword);
+        var command = new SignInCommand(_company.Employees.Single().Email.Value, _userPassword);
         _mockCompanyRepository
             .Setup(f => f.GetByUserEmailAsync(It.Is<string>(arg => arg == command.Email)));
-        _mockAuthenticator
-            .Setup(f => f.CreateAccessToken(_company.Users.Single().Id, new List<string>()
-            {
-                _company.Users.Single().Role
-            }))
-            .Returns(new AccessTokenDto(token));
         
         //act
         var exception = await Record.ExceptionAsync(async() 
@@ -70,17 +64,10 @@ public sealed class SignInCommandHandlerTests
     public async Task Handle_ForValidCredentialsAndFalseCanBeLoggedUser_ShouldThrowUserCanNotBeLoggedException()
     {
         //arrange
-        string token = "newAccessToken";
-        var command = new SignInCommand(_company.Users.Single().Email.Value, _userPassword);
+        var command = new SignInCommand(_company.Employees.Single().Email.Value, _userPassword);
         _mockCompanyRepository
             .Setup(f => f.GetByUserEmailAsync(It.Is<string>(arg => arg == command.Email)))
             .ReturnsAsync(_company);
-        _mockAuthenticator
-            .Setup(f => f.CreateAccessToken(_company.Users.Single().Id, new List<string>()
-            {
-                _company.Users.Single().Role
-            }))
-            .Returns(new AccessTokenDto(token));
         
         //act
         var exception = await Record.ExceptionAsync(async() 
@@ -95,17 +82,17 @@ public sealed class SignInCommandHandlerTests
     {
         //arrange
         string token = "newAccessToken";
-        var command = new SignInCommand(_company.Users.Single().Email.Value, "RandomStrongPassword");
+        var command = new SignInCommand(_company.Employees.Single().Email.Value, "RandomStrongPassword");
         _mockCompanyRepository
             .Setup(f => f.GetByUserEmailAsync(It.Is<string>(arg => arg == command.Email)))
             .ReturnsAsync(_company);
         _mockAuthenticator
-            .Setup(f => f.CreateAccessToken(_company.Users.Single().Id, new List<string>()
+            .Setup(f => f.CreateAccessToken(_company.Employees.Single().User.Id, new List<string>()
             {
-                _company.Users.Single().Role
+                _company.Employees.Single().User.Role
             }))
             .Returns(new AccessTokenDto(token));
-        _company.VerifyUser(_company.Users.Single().VerificationToken.Token);
+        _company.VerifyUser(_company.Employees.Single().User.VerificationToken.Token);
         
         //act
         var exception = await Record.ExceptionAsync(async() 
@@ -142,8 +129,10 @@ public sealed class SignInCommandHandlerTests
                 It.IsAny<string>()))
             .Returns(true);
         _company = Company.CreateOwnerCompany(Guid.NewGuid(), "TestCompany", "test.pl");
+        var employeeId = Guid.NewGuid();
+        _company.AddEmployee(employeeId, "test@test.pl");
         var registrationService = new UserRegistrationService(_mockPasswordManager.Object, new UserPasswordPolicy());
-        registrationService.RegisterNewUser([_company], _company.Id, Guid.NewGuid(), "test@test.pl",
+        registrationService.RegisterNewUser([_company], employeeId, Guid.NewGuid(),
             "testFirstName", "testLastName", "Test123#", Role.User());
     }
     #endregion

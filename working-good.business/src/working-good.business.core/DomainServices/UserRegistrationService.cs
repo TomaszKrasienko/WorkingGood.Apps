@@ -10,22 +10,23 @@ namespace working_good.business.core.DomainServices;
 internal sealed class UserRegistrationService(IPasswordManager passwordManager, IPasswordPolicy passwordPolicy)
     : IUserRegistrationService
 {
-    public Company RegisterNewUser(List<Company> companies, Guid companyId, Guid id, string email, string firstName, string lastName,
-        string password, string role)
+    public Company RegisterNewUser(List<Company> companies, Guid employeeId, Guid id, string firstName, 
+        string lastName, string password, string role)
     {
-        var isCompanyExists = companies.Any(x => x.Id == companyId);
-        if (!isCompanyExists)
+        var company = companies.FirstOrDefault(x => x.Employees.Any(arg => arg.Id == employeeId));
+        if (company is null)
         {
-            throw new CompanyDoesNotExistException(companyId);
-        }
-        var isCompanyWithUserExists = companies.Any(x => x.Users.Any(arg => arg.Email == email));
-        if (isCompanyWithUserExists)
-        {
-            throw new EmailAlreadyExistException(email);
+            throw new CompanyForEmployeeDoesNotExistException(employeeId);
         }
 
-        var company = companies.Single(x => x.Id == companyId);
-        company.RegisterUser(passwordPolicy, passwordManager, id, email, new FullName(firstName, lastName), password, role);
+        var employee = company.Employees.First(x => x.Id == employeeId);
+        if (employee.User is not null)
+        {
+            throw new UserAlreadyExistsException(employeeId);
+        }
+        
+        company.RegisterUser(passwordPolicy, passwordManager, employeeId, id, new FullName(firstName, lastName),
+            password, role);
         return company;
     }
 }

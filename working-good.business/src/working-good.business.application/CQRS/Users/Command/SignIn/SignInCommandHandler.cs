@@ -1,6 +1,7 @@
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.Exceptions;
 using working_good.business.application.Services;
+using working_good.business.application.Services.Security;
 using working_good.business.core.Abstractions;
 using working_good.business.core.Abstractions.Repositories;
 using InvalidPasswordException = working_good.business.core.Exceptions.InvalidPasswordException;
@@ -22,8 +23,8 @@ internal sealed class SignInCommandHandler(ICompanyRepository companyRepository,
         {
             throw new UserCanNotBeLoggedException(command.Email);
         }
-
-        var user = company.Users.Single(x => x.Email == command.Email);
+        
+        var user = company.Employees.Single(x => x.Email == command.Email).User;
         if (!passwordManager.IsValidPassword(command.Password, user.Password))
         {
             throw new IncorrectPasswordException(user.Id);

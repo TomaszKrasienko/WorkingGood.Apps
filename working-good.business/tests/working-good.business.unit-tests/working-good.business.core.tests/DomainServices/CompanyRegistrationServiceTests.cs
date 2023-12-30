@@ -1,6 +1,7 @@
 using FluentAssertions;
 using working_good.business.core.DomainServices;
 using working_good.business.core.DomainServices.Abstractions;
+using working_good.business.core.Exceptions;
 using working_good.business.core.Models.Company;
 using Xunit;
 
@@ -82,6 +83,24 @@ public sealed class CompanyRegistrationServiceTests
         
         //assert
         exception.Should().BeOfType<CompanyNameAlreadyExistsException>();
+    }
+    
+    [Fact]
+    public void RegisterCompany_ForCompanyWithNotUniqueEmailDomain_ShouldThrowCompanyEmailDomainAlreadyExists()
+    {
+        //arrange
+        List<Company> companies = new List<Company>()
+        {
+            _company,
+            _ownerCompany
+        };
+        
+        //act
+        var exception = Record.Exception(() => _companyRegistrationService.RegisterCompany(companies, Guid.NewGuid(), "newCompanyName", false,
+            _company.EmailDomain, new TimeSpan(10000)));
+        
+        //assert
+        exception.Should().BeOfType<CompanyEmailDomainAlreadyExists>();
     }
     
     #region arrange

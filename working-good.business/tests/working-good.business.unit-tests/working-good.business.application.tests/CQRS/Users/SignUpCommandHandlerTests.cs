@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using working_good.business.application.CQRS.Users.Command.SignUp;
+using working_good.business.application.Exceptions;
 using working_good.business.core.Abstractions;
 using working_good.business.core.Abstractions.Repositories;
 using working_good.business.core.DomainServices;
@@ -15,11 +16,13 @@ namespace working_good.business.application.tests.CQRS.Users;
 public sealed class SignUpCommandHandlerTests
 {
     [Fact]
-    public async Task SignUp_ForSignUpCommandAndExistingCompany_ShouldAddToCompanyAndUpdateCompany()
+    public async Task SignUp_ForSignUpCommandAndExistingCompanyAndEmployee_ShouldAddToEmployeeInCompanyAndUpdateCompanyByRepository()
     {
         //arrange
         Company company = Company.CreateOwnerCompany(Guid.NewGuid(), "TestCompany", "test.pl");
-        SignUpCommand command = new SignUpCommand(company.Id, Guid.NewGuid(), "test@test.pl", "testFirstName",
+        var employeeId = Guid.NewGuid();
+        company.AddEmployee(employeeId, "test@test.pl");
+        SignUpCommand command = new SignUpCommand(employeeId, Guid.NewGuid(), "testFirstName",
             "testLastName", "StrongPass123!", "User");
         _passwordManagerMock
             .Setup(f => f.Secure(It.Is<string>(arg => arg == command.Password)))
@@ -32,7 +35,7 @@ public sealed class SignUpCommandHandlerTests
         await _handler.HandleAsync(command, default);
         
         //assert
-        company.Users.Any().Should().BeTrue();
+        company.Employees.Single().User.Should().NotBeNull();
         _companyRepositoryMock
             .Verify(f => f.UpdateAsync(company));
     }
@@ -41,7 +44,7 @@ public sealed class SignUpCommandHandlerTests
     public async Task SignUp_ForSignUpCommandAndNonExistingCompanies_ShouldThrowCompaniesDoesNotExistsException()
     {
         //arrange
-        SignUpCommand command = new SignUpCommand(Guid.NewGuid(), Guid.NewGuid(), "test@test.pl", 
+        SignUpCommand command = new SignUpCommand( Guid.NewGuid(), Guid.NewGuid(), 
             "testFirstName", "testLastName", "StrongPass123!", "User");        
         _passwordManagerMock
             .Setup(f => f.Secure(It.Is<string>(arg => arg == "strongPassword123!")))

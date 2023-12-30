@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using working_good.business.application.Services;
+using working_good.business.application.Services.Security;
 using working_good.business.infrastructure.Services.Security.Configuration.Models;
 
 namespace working_good.business.infrastructure.Services.Security.Configuration;

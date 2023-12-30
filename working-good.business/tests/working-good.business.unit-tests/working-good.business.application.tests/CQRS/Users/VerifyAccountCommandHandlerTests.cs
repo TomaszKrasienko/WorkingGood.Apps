@@ -19,7 +19,7 @@ public sealed class VerifyAccountCommandHandlerTests
     public async Task Handle_ForValidVerifyAccountCommand_ShouldUpdateUserVerificationToken()
     {
         //arrange
-        var command = new VerifyAccountCommand(_company.Users.Single().VerificationToken.Token);
+        var command = new VerifyAccountCommand(_company.Employees.Single().User.VerificationToken.Token);
         _mockCompanyRepository
             .Setup(f => f.GetByUserVerificationTokenAsync(
                 It.Is<string>(arg => arg == command.VerificationToken)))
@@ -30,14 +30,14 @@ public sealed class VerifyAccountCommandHandlerTests
         
         //assert
         _mockCompanyRepository.Verify(f => f.UpdateAsync(It.Is<Company>(arg => arg == _company)));
-        _company.Users.Single().VerificationToken.VerificationDate.Should().NotBeNull();
+        _company.Employees.Single().User.VerificationToken.VerificationDate.Should().NotBeNull();
     }
     
     [Fact]
     public async Task Handle_ForNonExistingUser_ShouldThrowVerificationTokenDoesNotExistsException()
     {
         //arrange
-        var command = new VerifyAccountCommand(_company.Users.Single().VerificationToken.Token);
+        var command = new VerifyAccountCommand(_company.Employees.Single().User.VerificationToken.Token);
         
         //act
         var exception = await Record.ExceptionAsync(async () => await _handler.HandleAsync(command, default));
@@ -61,8 +61,10 @@ public sealed class VerifyAccountCommandHandlerTests
             .Setup(f => f.Secure(It.IsAny<string>()))
             .Returns("securedPassword");
         _company = Company.CreateOwnerCompany(Guid.NewGuid(), "TestCompany", "test.pl");
+        var employeeId = Guid.NewGuid();
+        _company.AddEmployee(employeeId, "test@test.pl");
         var registrationService = new UserRegistrationService(mockPasswordManager.Object, new UserPasswordPolicy());
-        registrationService.RegisterNewUser([_company], _company.Id, Guid.NewGuid(), "test@test.pl",
+        registrationService.RegisterNewUser([_company],  employeeId, Guid.NewGuid(),
             "testFirstName", "testLastName", "Test123#", Role.User());
     }
     #endregion

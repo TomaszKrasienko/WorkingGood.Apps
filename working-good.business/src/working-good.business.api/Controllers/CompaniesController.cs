@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.CQRS.Companies.Commands.Register;
 using working_good.business.application.CQRS.Companies.Queries;
+using working_good.business.application.CQRS.Companies.Queries.GetCompanies;
 using working_good.business.application.CQRS.Companies.Queries.GetCompanyById;
 using working_good.business.application.CQRS.Employees.Commands;
+using working_good.business.application.CQRS.Employees.Queries.GetEmployees;
 using working_good.business.application.CQRS.Users.Command.SignIn;
 using working_good.business.application.CQRS.Users.Command.SignUp;
 using working_good.business.application.CQRS.Users.Command.VerifyAccount;
@@ -18,7 +20,9 @@ namespace working_good.business.api.Controllers;
 [ApiController]
 public sealed class CompaniesController(
     IQueryHandler<GetCompanyByIdQuery, CompanyDto> getCompanyQueryHandler,
+    IQueryHandler<GetCompaniesQuery, IEnumerable<CompanyDto>> getCompaniesQueryHandler,
     IQueryHandler<GetAvailableUserRolesQuery, List<string>> userRolesHandler,
+    IQueryHandler<GetEmployeesQuery, IEnumerable<EmployeeDto>> getEmployeesQueryHandler,
     ICommandHandler<RegisterCompanyCommand> registerCompanyCommandHandler,
     ICommandHandler<AddEmployeeCommand> addEmployeeCommandHandler,
     ICommandHandler<SignUpCommand> signUpCommandHandler,
@@ -34,6 +38,20 @@ public sealed class CompaniesController(
         return Ok(company);
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies([FromQuery] GetCompaniesQuery getCompaniesQuery, CancellationToken cancellationToken)
+    {
+        var companies =
+            await getCompaniesQueryHandler.HandleAsync(getCompaniesQuery, cancellationToken);
+        return Ok(companies);
+    }
+
+    [HttpGet("{companyId:guid}/employees")]
+    public async Task<IActionResult> GetEmployeeByCompanyId(Guid companyId, CancellationToken cancellationToken)
+    {
+        return Ok(await getEmployeesQueryHandler.HandleAsync(new GetEmployeesQuery(companyId), cancellationToken));
+    }
+    
     [HttpGet("employees/{employeeId:guid}")]
     public async Task<IActionResult> GetEmployeeById(Guid employeeId)
     {

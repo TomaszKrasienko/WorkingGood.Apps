@@ -11,6 +11,7 @@ using working_good.business.infrastructure.Configuration.Models;
 using working_good.business.infrastructure.DAL.Configuration;
 using working_good.business.infrastructure.Exceptions;
 using working_good.business.infrastructure.Exceptions.Middlewares;
+using working_good.business.infrastructure.Logging.Configuration;
 using working_good.business.infrastructure.Services;
 using working_good.business.infrastructure.Services.Security;
 using working_good.business.infrastructure.Services.Security.Configuration;
@@ -23,6 +24,7 @@ public static class Extensions
         => services
             .SetDalConfiguration(configuration)
             .SetSecurityConfiguration(configuration)
+            .SetLoggingConfiguration(configuration)
             .SetServices()
             .SetMiddlewares()
             .SetBanner(configuration)

@@ -58,6 +58,8 @@ public sealed class Company : AggregateRoot
         }
 
         var user = User.CreateUser(userPasswordPolicy, passwordManager, id, fullName, password, role);
+        //Todo: To delete
+        Console.WriteLine(user.VerificationToken.Token);
         employee.User = user;
     }
 

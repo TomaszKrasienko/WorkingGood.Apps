@@ -1,24 +1,25 @@
 version: '3'
 
 services:
-  postgres-wg:
-    image: postgres
-    shm_size: '4gb'
-    container_name: postgres-wg
-    restart: unless-stopped
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
+  sql_server-wg:
+    container_name: sql_server-wg
+    image: mcr.microsoft.com/mssql/server:latest
     ports:
-      - 30001:5432  
-    volumes:
-      - postgres:/var/lib/postgresql_wg /data
+      - "30001:1433"
+    environment:
+      SA_PASSWORD: "StrongSaPassword123!"
+      ACCEPT_EULA: "Y"
   rabbit_mq-wg:
     container_name: rabbit_mq-wg
     image: rabbitmq:3-management
     ports:
       - 30002:5672
       - 30003:15672
-
+volumes:
+  postgres:
+    driver: local
+  dbdata6:
+  
 networks:
   default:
     name: wg-network

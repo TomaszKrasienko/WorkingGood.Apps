@@ -13,7 +13,7 @@ internal sealed class InMemoryCompanyRepository : ICompanyRepository
     public Task<Company> GetByIdAsync(Guid companyId)
         => Task.FromResult(_companies.FirstOrDefault(x => x.Id == companyId));
 
-    public Task<Company> GetByUserEmailAsync(string email)
+    public Task<Company> GetByEmployeeEmailAsync(string email)
         => Task.FromResult(_companies.FirstOrDefault(x
             => x.Employees.Any(arg => arg.Email == email)));
     

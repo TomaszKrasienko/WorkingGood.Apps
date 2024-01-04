@@ -15,6 +15,12 @@ public sealed class Company : AggregateRoot
     public EmailDomain EmailDomain { get; private set; }
     private ISet<Employee> _employees = new HashSet<Employee>();
     public IEnumerable<Employee> Employees => _employees;
+
+    //For EntityFramework
+    private Company() : base(Guid.NewGuid())
+    {
+        
+    }
     
     private Company(EntityId entityId, Name name, IsOwner isOwner, SlaTimeSpan slaTimeSpan,
         EmailDomain emailDomain) 
@@ -57,7 +63,7 @@ public sealed class Company : AggregateRoot
             throw new EmployeeDoesNotExistException(employeeId);
         }
 
-        var user = User.CreateUser(userPasswordPolicy, passwordManager, id, fullName, password, role);
+        var user = User.CreateUser(userPasswordPolicy, passwordManager, id, fullName, password, role, employeeId);
         //Todo: To delete
         Console.WriteLine(user.VerificationToken.Token);
         employee.User = user;

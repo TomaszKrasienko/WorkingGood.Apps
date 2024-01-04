@@ -1,28 +1,22 @@
+using System.Collections;
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.DTOs;
 using working_good.business.application.Mappers;
+using working_good.business.application.Services.QueryRepositories;
 using working_good.business.core.Abstractions.Repositories;
 
 namespace working_good.business.application.CQRS.Employees.Queries.GetEmployees;
 
-internal sealed class GetEmployeesQueryHandler : IQueryHandler<GetEmployeesQuery, IEnumerable<EmployeeDto>>
+internal sealed class GetEmployeesQueryHandler : IQueryHandler<GetEmployeesQuery, QueryPaginationDto<IEnumerable<EmployeeDto>>>
 {
-    private readonly ICompanyRepository _companyRepository;
+    private readonly IEmployeesQueryRepository _employeesQueryRepository;
 
-    public GetEmployeesQueryHandler(ICompanyRepository companyRepository)
+    public GetEmployeesQueryHandler(IEmployeesQueryRepository employeesQueryRepository)
     {
-        _companyRepository = companyRepository;
+        _employeesQueryRepository = employeesQueryRepository;
     }
 
-    public async Task<IEnumerable<EmployeeDto>> HandleAsync(GetEmployeesQuery query, CancellationToken cancellationToken)
-    {
-        if (query.companyId is null)
-        {
-            var company = await _companyRepository.GetByIdAsync((Guid)query.companyId);
-            return company.Employees.Select(x => x.AsDto()).ToList();
-        }
-
-        var employees = (await _companyRepository.GetAllAsync()).SelectMany(x => x.Employees);
-        return employees.Select(x => x.AsDto());
-    }
+    public Task<QueryPaginationDto<IEnumerable<EmployeeDto>>> HandleAsync(GetEmployeesQuery query,
+        CancellationToken cancellationToken)
+        => _employeesQueryRepository.GetEmployees(query.PageNumber, query.PageSize, query.CompanyId);
 }

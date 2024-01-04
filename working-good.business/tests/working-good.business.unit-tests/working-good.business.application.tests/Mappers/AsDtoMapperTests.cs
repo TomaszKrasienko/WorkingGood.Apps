@@ -71,7 +71,7 @@ public class AsDtoMapperTests
             .Setup(f => f.Secure(It.IsAny<string>()))
             .Returns("securedPassword");
         employee.User = User.CreateUser(_passwordPolicy, _passwordManagerMock.Object, Guid.NewGuid(),
-            new FullName("testFirstName", "testLastName"), "Test123#", Role.User());
+            new FullName("testFirstName", "testLastName"), "Test123#", Role.User(), employee.Id);
         
         //act
         var employeeDto = employee.AsDto();

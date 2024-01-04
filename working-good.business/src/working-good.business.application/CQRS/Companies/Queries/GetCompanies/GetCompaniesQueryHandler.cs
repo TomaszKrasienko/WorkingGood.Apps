@@ -1,36 +1,18 @@
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.DTOs;
-using working_good.business.application.Mappers;
-using working_good.business.core.Abstractions.Repositories;
+using working_good.business.application.Services.QueryRepositories;
 
 namespace working_good.business.application.CQRS.Companies.Queries.GetCompanies;
 
-internal sealed class GetCompaniesQueryHandler : IQueryHandler<GetCompaniesQuery, IEnumerable<CompanyDto>>
+internal sealed class GetCompaniesQueryHandler : IQueryHandler<GetCompaniesQuery, QueryPaginationDto<IEnumerable<CompanyDto>>>
 {
-    private readonly ICompanyRepository _companyRepository;
-
-    public GetCompaniesQueryHandler(ICompanyRepository companyRepository)
+    private readonly ICompanyQueryRepository _companyQueryRepository;
+    public GetCompaniesQueryHandler(ICompanyQueryRepository companyQueryRepository)
     {
-        _companyRepository = companyRepository;
+        _companyQueryRepository = companyQueryRepository;
     }
-    
-    public async Task<IEnumerable<CompanyDto>> HandleAsync(GetCompaniesQuery query, CancellationToken cancellationToken)
-    {
-        if (!string.IsNullOrEmpty(query.Name))
-        {
-            return (await _companyRepository.GetAllAsync())
-                .Where(x 
-                    => x.Name.Value.Contains(query.Name) 
-                       && x.IsOwner.Value == !query.IsClient)
-                .Select(x => x.AsDto());
-        }
-        else
-        {
-             return (await _companyRepository.GetAllAsync())
-                .Where(x 
-                    =>  x.IsOwner.Value == !query.IsClient)
-                .Select(x => x.AsDto());
-        }
 
-    }
+    public async Task<QueryPaginationDto<IEnumerable<CompanyDto>>> HandleAsync(GetCompaniesQuery query, CancellationToken cancellationToken)
+        => await _companyQueryRepository.GetCompaniesList(query.PageNumber, query.PageSize, query.CompanyName,
+            query.IsOwner);
 }

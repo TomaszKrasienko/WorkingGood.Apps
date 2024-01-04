@@ -1,19 +1,21 @@
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.DTOs;
 using working_good.business.application.Mappers;
+using working_good.business.application.Services.QueryRepositories;
 using working_good.business.core.Abstractions.Repositories;
 
 namespace working_good.business.application.CQRS.Companies.Queries.GetCompanyById;
 
 internal sealed class GetCompanyByIdQueryHandler : IQueryHandler<GetCompanyByIdQuery, CompanyDto>
 {
-    private readonly ICompanyRepository _companyRepository;
+    private readonly ICompanyQueryRepository _companyQueryRepository;
     
-    public GetCompanyByIdQueryHandler(ICompanyRepository companyRepository)
+    public GetCompanyByIdQueryHandler(ICompanyQueryRepository companyQueryRepository)
     {
-        _companyRepository = companyRepository;
+        _companyQueryRepository = companyQueryRepository;
     }
-    public async Task<CompanyDto> HandleAsync(GetCompanyByIdQuery query, CancellationToken cancellationToken)
-        => (await _companyRepository.GetByIdAsync(query.Id)).AsDto();
-    
+
+    public Task<CompanyDto> HandleAsync(GetCompanyByIdQuery query, CancellationToken cancellationToken)
+        => _companyQueryRepository.GetCompanyById(query.Id);
+
 }

@@ -26,7 +26,7 @@ public sealed class SignInCommandHandlerTests
         string token = "newAccessToken";
         var command = new SignInCommand(_company.Employees.Single().Email.Value, _userPassword);
         _mockCompanyRepository
-            .Setup(f => f.GetByUserEmailAsync(It.Is<string>(arg => arg == command.Email)))
+            .Setup(f => f.GetByEmployeeEmailAsync(It.Is<string>(arg => arg == command.Email)))
             .ReturnsAsync(_company);
         _mockAuthenticator
             .Setup(f => f.CreateAccessToken(_company.Employees.Single().User.Id, new List<string>()
@@ -50,7 +50,7 @@ public sealed class SignInCommandHandlerTests
         //arrange
         var command = new SignInCommand(_company.Employees.Single().Email.Value, _userPassword);
         _mockCompanyRepository
-            .Setup(f => f.GetByUserEmailAsync(It.Is<string>(arg => arg == command.Email)));
+            .Setup(f => f.GetByEmployeeEmailAsync(It.Is<string>(arg => arg == command.Email)));
         
         //act
         var exception = await Record.ExceptionAsync(async() 
@@ -66,7 +66,7 @@ public sealed class SignInCommandHandlerTests
         //arrange
         var command = new SignInCommand(_company.Employees.Single().Email.Value, _userPassword);
         _mockCompanyRepository
-            .Setup(f => f.GetByUserEmailAsync(It.Is<string>(arg => arg == command.Email)))
+            .Setup(f => f.GetByEmployeeEmailAsync(It.Is<string>(arg => arg == command.Email)))
             .ReturnsAsync(_company);
         
         //act
@@ -84,7 +84,7 @@ public sealed class SignInCommandHandlerTests
         string token = "newAccessToken";
         var command = new SignInCommand(_company.Employees.Single().Email.Value, "RandomStrongPassword");
         _mockCompanyRepository
-            .Setup(f => f.GetByUserEmailAsync(It.Is<string>(arg => arg == command.Email)))
+            .Setup(f => f.GetByEmployeeEmailAsync(It.Is<string>(arg => arg == command.Email)))
             .ReturnsAsync(_company);
         _mockAuthenticator
             .Setup(f => f.CreateAccessToken(_company.Employees.Single().User.Id, new List<string>()

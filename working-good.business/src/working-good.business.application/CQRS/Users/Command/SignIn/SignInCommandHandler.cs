@@ -14,7 +14,7 @@ internal sealed class SignInCommandHandler(ICompanyRepository companyRepository,
 
     public async Task HandleAsync(SignInCommand command, CancellationToken token)
     {
-        var company = await companyRepository.GetByUserEmailAsync(command.Email);
+        var company = await companyRepository.GetByEmployeeEmailAsync(command.Email);
         if (company is null)
         {
             throw new UserNotFoundException(command.Email);

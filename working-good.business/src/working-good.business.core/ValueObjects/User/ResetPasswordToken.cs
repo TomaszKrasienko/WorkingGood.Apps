@@ -6,6 +6,13 @@ public sealed record ResetPasswordToken
 {
     public string Token { get; }
     public DateTime? Expiry { get; }
+
+    //For EntityFramework
+    private ResetPasswordToken(string token, DateTime? expiry)
+    {
+        Token = token;
+        Expiry = expiry;
+    }
     private ResetPasswordToken(DateTime expiry)
     {
         Expiry = expiry;

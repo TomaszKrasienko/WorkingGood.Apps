@@ -20,9 +20,9 @@ namespace working_good.business.api.Controllers;
 [ApiController]
 public sealed class CompaniesController(
     IQueryHandler<GetCompanyByIdQuery, CompanyDto> getCompanyQueryHandler,
-    IQueryHandler<GetCompaniesQuery, IEnumerable<CompanyDto>> getCompaniesQueryHandler,
+    IQueryHandler<GetCompaniesQuery, QueryPaginationDto<IEnumerable<CompanyDto>>> getCompaniesQueryHandler,
     IQueryHandler<GetAvailableUserRolesQuery, List<string>> userRolesHandler,
-    IQueryHandler<GetEmployeesQuery, IEnumerable<EmployeeDto>> getEmployeesQueryHandler,
+    IQueryHandler<GetEmployeesQuery, QueryPaginationDto<IEnumerable<EmployeeDto>>> getEmployeesQueryHandler,
     ICommandHandler<RegisterCompanyCommand> registerCompanyCommandHandler,
     ICommandHandler<AddEmployeeCommand> addEmployeeCommandHandler,
     ICommandHandler<SignUpCommand> signUpCommandHandler,
@@ -47,9 +47,13 @@ public sealed class CompaniesController(
     }
 
     [HttpGet("{companyId:guid}/employees")]
-    public async Task<IActionResult> GetEmployeeByCompanyId(Guid companyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetEmployeeByCompanyId([FromRoute] Guid companyId, [FromQuery] PaginationArgumentsDto paginationArgumentsDto, CancellationToken cancellationToken)
     {
-        return Ok(await getEmployeesQueryHandler.HandleAsync(new GetEmployeesQuery(companyId), cancellationToken));
+        return Ok(await getEmployeesQueryHandler.HandleAsync(new GetEmployeesQuery(companyId)
+        {
+            PageNumber = paginationArgumentsDto.PageNumber, 
+            PageSize = paginationArgumentsDto.PageSize
+        }, cancellationToken));
     }
     
     [HttpGet("employees/{employeeId:guid}")]

@@ -2,14 +2,20 @@
 # @url = http://localhost:30021
 @email = tomasz.krasienko@outlook.com
 @password = Test123#
-@companyId = 78746a16-8ac2-4ad9-9ac8-b069a593b271
-@employeeId = 2094202a-7a20-4869-bc27-dd7a03a6f8bd
+@companyId = 1049eec8-567f-433b-9665-4f10748f7c47
+@employeeId = 6e277d1d-4c2b-4c28-99fe-3e2dd90f9bcd
 
 ###
 GET {{url}}/companies/{{companyId}}
 
 ###
-GET {{url}}/users/get-available-roles
+GET {{url}}/companies?PageSize=2&PageNumber=1
+
+###
+GET {{url}}/companies/employees/users/get-available-roles
+
+###
+GET {{url}}/companies/{{companyId}}/employees?PageSize=3&PageNumber1
 
 ###
 POST {{url}}/companies/register-company
@@ -22,11 +28,22 @@ Content-Type: application/json
 }
 
 ###
+POST {{url}}/companies/register-company
+Content-Type: application/json
+
+{
+  "name": "test2Company",
+  "isOwner": false,
+  "emailDomain": "test2.com",
+  "slaTimeSpan":"10:00:00"
+}
+
+###
 POST {{url}}/companies/{{companyId}}/add-employee
 Content-Type: application/json
 
 {
-  "email":"test@outlook.com" 
+  "email":"testEmployee3@test2.com" 
 }
 
 ###
@@ -45,7 +62,7 @@ POST {{url}}/companies/employees/users/verify-account
 Content-Type: application/json
 
 {
-  "verificationToken":"NXPavfl5G5rRZJOlkAqH5xuotisWpXqOonvG4MGrMwRVfVM0yJkzh31MwW8hgi3O5Gf3V7tydq3k8RBB0UA9g"
+  "verificationToken":"2LNy27p8JX0g3Bm41RTZdxqIIKKBQ3sQurJ94mKtKCDTBIB6Tysz6qvxAOs+fXFkfhx0HCPgwnAjuk8Dvavf3A"
 }
 
 

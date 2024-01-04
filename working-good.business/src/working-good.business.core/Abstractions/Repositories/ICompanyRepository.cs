@@ -6,7 +6,7 @@ public interface ICompanyRepository
 {
     Task<List<Company>> GetAllAsync();
     Task<Company> GetByIdAsync(Guid companyId);
-    Task<Company> GetByUserEmailAsync(string email);
+    Task<Company> GetByEmployeeEmailAsync(string email);
     Task<Company> GetByUserVerificationTokenAsync(string verificationToken);
     Task AddAsync(Company company);
     Task UpdateAsync(Company company);

@@ -7,6 +7,12 @@ public class Employee : Entity
 {
     public Email Email { get; private set; }
     public User User { get; set; }
+
+    //For EntityFramework
+    private Employee() : base(Guid.NewGuid())
+    {
+        
+    }
     
     internal Employee(EntityId entityId, Email email) : base(entityId)
     {

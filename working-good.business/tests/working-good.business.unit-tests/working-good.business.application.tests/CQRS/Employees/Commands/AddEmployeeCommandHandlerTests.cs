@@ -44,7 +44,7 @@ public sealed class AddEmployeeCommandHandlerTests
         var exception = await Record.ExceptionAsync(async() => await _handler.HandleAsync(command, default));
         
         //assert
-        exception.Should().BeOfType<CompanyForEmployeeDoesNotExistException>();
+        exception.Should().BeOfType<CompanyDoesNotExistException>();
     }
     
     private readonly Mock<ICompanyRepository> _companyRepositoryMock;

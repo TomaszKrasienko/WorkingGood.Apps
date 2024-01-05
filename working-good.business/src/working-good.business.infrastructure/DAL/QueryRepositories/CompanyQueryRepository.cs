@@ -9,7 +9,7 @@ namespace working_good.business.infrastructure.DAL.QueryRepositories;
 internal sealed class CompanyQueryRepository(IWgDbConnection dbConnection) : ICompanyQueryRepository
 {
     public async Task<QueryPaginationDto<IEnumerable<CompanyDto>>> GetCompaniesList(int pageNumber, int pageSize,
-        string name = null, bool? isClient = null)
+        string name = null, bool? isOwner = null)
     {
         var procedure = "wg.GetCompaniesList";
         DynamicParameters parameters = new DynamicParameters();
@@ -19,9 +19,9 @@ internal sealed class CompanyQueryRepository(IWgDbConnection dbConnection) : ICo
         {
             parameters.Add("@companyName", name);
         }
-        if (isClient is not null)
+        if (isOwner is not null)
         {
-            parameters.Add("@isOwner", !isClient);
+            parameters.Add("@isOwner", isOwner);
         }
 
         using var connection = dbConnection.DbConnection;
@@ -42,7 +42,6 @@ internal sealed class CompanyQueryRepository(IWgDbConnection dbConnection) : ICo
                 , [IsOwner] AS {nameof(CompanyDto.IsOwner)}
                 , [SlaTimeSpan] AS {nameof(CompanyDto.SlaTimeSpan)}
                 , [EmailDomain] AS {nameof(CompanyDto.EmailDomain)}
-            INTO #TmpCompanies
             FROM wg.Companies comp
             WHERE 1=1
               AND comp.Id = @companyId";

@@ -4,15 +4,15 @@ namespace working_good.business.core.ValueObjects.User;
 
 public record Role
 {
-    public static IEnumerable<string> AvailableRoles = new[] {"Manager", "Employee", "User"};
-
+    public static IEnumerable<string> AvailableRolesForOwner = new[] { "Manager", "Employee" };
+    public static IEnumerable<string> AvailableRolesForClient = new[] { "User" };
     public string Value { get; }
 
     public Role(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new InvalidUserRoleException(value);
-        if (!AvailableRoles.Contains(value))
+        if (!AvailableRolesForOwner.Contains(value) && !AvailableRolesForClient.Contains(value))
             throw new InvalidUserRoleException(value);
         Value = value;
     }

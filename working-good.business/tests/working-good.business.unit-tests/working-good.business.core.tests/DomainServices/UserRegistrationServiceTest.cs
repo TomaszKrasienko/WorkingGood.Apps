@@ -16,7 +16,7 @@ namespace working_good.business.core.tests.DomainServices;
 public sealed class UserRegistrationServiceTest
 {
     [Fact]
-    public void RegisterNewUser_ForExistingEmployee_ShouldReturnCompanyWithEmployeeAndUser()
+    public void RegisterNewUser_ForExistingEmployeeAndClientCompany_ShouldReturnCompanyWithEmployeeAndUserWithRoleUser()
     {
         //arrange
         var company = Company.CreateCompany(Guid.NewGuid(), "testCompanyName", 
@@ -32,7 +32,7 @@ public sealed class UserRegistrationServiceTest
         
         //act
         var result = _userRegistrationService.RegisterNewUser([company], employeeId,
-            userId, "firstName", "lastName", password, Role.Employee());
+            userId, "firstName", "lastName", password);
         
         //assert
         result.Should().BeOfType<Company>();
@@ -40,6 +40,65 @@ public sealed class UserRegistrationServiceTest
             => x.Id.Equals(employeeId)
             && x.User is not null
             && x.User.Id == userId).Should().BeTrue();
+        result.Employees.First(x => x.Id.Equals(employeeId)).User.Role.Should().Be(Role.User());
+    }
+    
+    [Fact]
+    public void RegisterNewUser_ForExistingEmployeeFirstUserAndOwnerCompany_ShouldReturnCompanyWithEmployeeAndUserWithRoleManager()
+    {
+        //arrange
+        var company = Company.CreateOwnerCompany(Guid.NewGuid(), "testCompanyName", "test.pl");
+        company.AddEmployee(Guid.NewGuid(), "test@test.pl");
+        var employeeId = company.Employees.Single().Id;
+        
+        string password = "Test123!";
+        Guid userId = Guid.NewGuid();
+        _passwordManagerMock
+            .Setup(f => f.Secure(It.Is<string>(arg => arg == password)))
+            .Returns("securedPassword");
+        
+        //act
+        var result = _userRegistrationService.RegisterNewUser([company], employeeId,
+            userId, "firstName", "lastName", password);
+        
+        //assert
+        result.Should().BeOfType<Company>();
+        result.Employees.Any(x 
+            => x.Id.Equals(employeeId)
+               && x.User is not null
+               && x.User.Id == userId).Should().BeTrue();
+        result.Employees.First(x => x.Id.Equals(employeeId)).User.Role.Should().Be(Role.Manager());
+    }
+    
+    [Fact]
+    public void RegisterNewUser_ForExistingEmployeeNotFirstUserAndOwnerCompany_ShouldReturnCompanyWithEmployeeAndUserWithRoleEmployee()
+    {
+        //arrange
+        var company = Company.CreateOwnerCompany(Guid.NewGuid(), "testCompanyName", "test.pl");
+        var existedEmployeeId = Guid.NewGuid();
+        company.AddEmployee(existedEmployeeId, "first@test.pl");        
+        Guid userId = Guid.NewGuid();
+        string password = "Test123!";
+        _passwordManagerMock
+            .Setup(f => f.Secure(It.Is<string>(arg => arg == password)))
+            .Returns("securedPassword");
+        _userRegistrationService.RegisterNewUser([company], existedEmployeeId,
+            userId, "firstName", "lastName", password);
+
+        var newEmployeeId = Guid.NewGuid();
+        company.AddEmployee(newEmployeeId, "test@test.pl");
+        
+        //act
+        var result = _userRegistrationService.RegisterNewUser([company], newEmployeeId,
+            userId, "firstName", "lastName", password);
+        
+        //assert
+        result.Should().BeOfType<Company>();
+        result.Employees.Any(x 
+            => x.Id.Equals(newEmployeeId)
+               && x.User is not null
+               && x.User.Id == userId).Should().BeTrue();
+        result.Employees.First(x => x.Id.Equals(newEmployeeId)).User.Role.Should().Be(Role.Employee());
     }
     
     [Fact]
@@ -51,7 +110,7 @@ public sealed class UserRegistrationServiceTest
 
         //act
         var exception = Record.Exception(() => _userRegistrationService.RegisterNewUser([company],  Guid.NewGuid(), 
-            Guid.NewGuid(), "firstName", "lastName", "testPass123!", Role.Employee()));
+            Guid.NewGuid(), "firstName", "lastName", "testPass123!"));
 
         //assert
         exception.Should().BeOfType<CompanyForEmployeeDoesNotExistException>();
@@ -72,11 +131,11 @@ public sealed class UserRegistrationServiceTest
             .Setup(f => f.Secure(It.Is<string>(arg => arg == password)))
             .Returns("securedPassword");
         _userRegistrationService.RegisterNewUser([company],  employeeId,
-            userId, "firstName", "lastName", password, Role.Employee());
+            userId, "firstName", "lastName", password);
         
         //act
         var exception = Record.Exception(() => _userRegistrationService.RegisterNewUser([company],  employeeId,
-            userId, "firstName", "lastName", password, Role.Employee()));
+            userId, "firstName", "lastName", password));
         
         //assert
         exception.Should().BeOfType<UserAlreadyExistsException>();
@@ -99,7 +158,7 @@ public sealed class UserRegistrationServiceTest
         
         //act
         var exception = Record.Exception(() => _userRegistrationService.RegisterNewUser([company], employeeId,
-            userId, "firstName", "lastName", password, Role.Employee()));
+            userId, "firstName", "lastName", password));
         
         //assert
         exception.Should().BeOfType<ToWeakPasswordException>();

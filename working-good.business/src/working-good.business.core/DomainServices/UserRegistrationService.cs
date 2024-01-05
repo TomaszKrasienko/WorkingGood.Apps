@@ -11,7 +11,7 @@ internal sealed class UserRegistrationService(IPasswordManager passwordManager, 
     : IUserRegistrationService
 {
     public Company RegisterNewUser(List<Company> companies, Guid employeeId, Guid id, string firstName, 
-        string lastName, string password, string role)
+        string lastName, string password)
     {
         var company = companies.FirstOrDefault(x => x.Employees.Any(arg => arg.Id == employeeId));
         if (company is null)
@@ -26,7 +26,7 @@ internal sealed class UserRegistrationService(IPasswordManager passwordManager, 
         }
         
         company.RegisterUser(passwordPolicy, passwordManager, employeeId, id, new FullName(firstName, lastName),
-            password, role);
+            password);
         return company;
     }
 }

@@ -23,7 +23,7 @@ public sealed class SignUpCommandHandlerTests
         var employeeId = Guid.NewGuid();
         company.AddEmployee(employeeId, "test@test.pl");
         SignUpCommand command = new SignUpCommand(employeeId, Guid.NewGuid(), "testFirstName",
-            "testLastName", "StrongPass123!", "User");
+            "testLastName", "StrongPass123!");
         _passwordManagerMock
             .Setup(f => f.Secure(It.Is<string>(arg => arg == command.Password)))
             .Returns("NewStrongSecuredPassword");
@@ -45,7 +45,7 @@ public sealed class SignUpCommandHandlerTests
     {
         //arrange
         SignUpCommand command = new SignUpCommand( Guid.NewGuid(), Guid.NewGuid(), 
-            "testFirstName", "testLastName", "StrongPass123!", "User");        
+            "testFirstName", "testLastName", "StrongPass123!");        
         _passwordManagerMock
             .Setup(f => f.Secure(It.Is<string>(arg => arg == "strongPassword123!")))
             .Returns("NewStrongSecuredPassword");

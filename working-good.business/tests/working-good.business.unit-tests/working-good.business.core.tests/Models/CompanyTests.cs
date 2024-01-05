@@ -72,7 +72,7 @@ public sealed class CompanyTests
          _passwordManagerMock
              .Setup(f => f.Secure(It.IsAny<string>())).Returns("securedPassword");
          company.RegisterUser(_passwordPolicy, _passwordManagerMock.Object, employeeId,Guid.NewGuid(), 
-             new FullName("firstName", "lastName"), "strongPass123!", Role.User());
+             new FullName("firstName", "lastName"), "strongPass123!");
          var user = company.Employees.First(x => x.Id == employeeId).User;
          
          //act
@@ -94,7 +94,7 @@ public sealed class CompanyTests
          _passwordManagerMock
              .Setup(f => f.Secure(It.IsAny<string>())).Returns("securedPassword");
          company.RegisterUser(_passwordPolicy, _passwordManagerMock.Object, employeeId,Guid.NewGuid(), 
-             new FullName("firstName", "lastName"), "strongPass123!", Role.User());
+             new FullName("firstName", "lastName"), "strongPass123!");
          var user = company.Employees.First(x => x.Id == employeeId).User;
          company.VerifyUser(user.VerificationToken.Token);
          
@@ -117,7 +117,7 @@ public sealed class CompanyTests
          _passwordManagerMock
              .Setup(f => f.Secure(It.IsAny<string>())).Returns("securedPassword");
          company.RegisterUser(_passwordPolicy, _passwordManagerMock.Object, employeeId,Guid.NewGuid(), 
-             new FullName("firstName", "lastName"), "strongPass123!", Role.User());
+             new FullName("firstName", "lastName"), "strongPass123!");
          var user = company.Employees.First(x => x.Id == employeeId).User;
          
          //act

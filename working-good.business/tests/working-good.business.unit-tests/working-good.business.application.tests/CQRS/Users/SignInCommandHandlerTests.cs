@@ -133,7 +133,7 @@ public sealed class SignInCommandHandlerTests
         _company.AddEmployee(employeeId, "test@test.pl");
         var registrationService = new UserRegistrationService(_mockPasswordManager.Object, new UserPasswordPolicy());
         registrationService.RegisterNewUser([_company], employeeId, Guid.NewGuid(),
-            "testFirstName", "testLastName", "Test123#", Role.User());
+            "testFirstName", "testLastName", "Test123#");
     }
     #endregion
 }

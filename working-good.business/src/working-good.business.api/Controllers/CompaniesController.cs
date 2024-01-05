@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.CQRS.Companies.Commands.Register;
-using working_good.business.application.CQRS.Companies.Queries;
 using working_good.business.application.CQRS.Companies.Queries.GetCompanies;
 using working_good.business.application.CQRS.Companies.Queries.GetCompanyById;
 using working_good.business.application.CQRS.Employees.Commands;
@@ -9,9 +8,7 @@ using working_good.business.application.CQRS.Employees.Queries.GetEmployees;
 using working_good.business.application.CQRS.Users.Command.SignIn;
 using working_good.business.application.CQRS.Users.Command.SignUp;
 using working_good.business.application.CQRS.Users.Command.VerifyAccount;
-using working_good.business.application.CQRS.Users.Queries.GetAvailableResources;
 using working_good.business.application.DTOs;
-using working_good.business.application.Services;
 using working_good.business.application.Services.Security;
 
 namespace working_good.business.api.Controllers;
@@ -21,7 +18,6 @@ namespace working_good.business.api.Controllers;
 public sealed class CompaniesController(
     IQueryHandler<GetCompanyByIdQuery, CompanyDto> getCompanyQueryHandler,
     IQueryHandler<GetCompaniesQuery, QueryPaginationDto<IEnumerable<CompanyDto>>> getCompaniesQueryHandler,
-    IQueryHandler<GetAvailableUserRolesQuery, List<string>> userRolesHandler,
     IQueryHandler<GetEmployeesQuery, QueryPaginationDto<IEnumerable<EmployeeDto>>> getEmployeesQueryHandler,
     ICommandHandler<RegisterCompanyCommand> registerCompanyCommandHandler,
     ICommandHandler<AddEmployeeCommand> addEmployeeCommandHandler,
@@ -47,12 +43,12 @@ public sealed class CompaniesController(
     }
 
     [HttpGet("{companyId:guid}/employees")]
-    public async Task<IActionResult> GetEmployeeByCompanyId([FromRoute] Guid companyId, [FromQuery] PaginationArgumentsDto paginationArgumentsDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetEmployeeByCompanyId([FromRoute] Guid companyId, [FromQuery]int pageSize, int pageNumber, CancellationToken cancellationToken)
     {
         return Ok(await getEmployeesQueryHandler.HandleAsync(new GetEmployeesQuery(companyId)
         {
-            PageNumber = paginationArgumentsDto.PageNumber, 
-            PageSize = paginationArgumentsDto.PageSize
+            PageNumber = pageNumber, 
+            PageSize = pageSize
         }, cancellationToken));
     }
     
@@ -60,13 +56,6 @@ public sealed class CompaniesController(
     public async Task<IActionResult> GetEmployeeById(Guid employeeId)
     {
         return Ok();
-    }
-    
-    [HttpGet("employees/users/get-available-roles")]
-    public async Task<ActionResult<List<string>>> GetAvailableRoles(CancellationToken cancellationToken)
-    {
-        var result = await userRolesHandler.HandleAsync(new GetAvailableUserRolesQuery(), cancellationToken);
-        return Ok(result);
     }
     
     [HttpPost("register-company")]

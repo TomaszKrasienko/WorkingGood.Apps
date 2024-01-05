@@ -53,8 +53,7 @@ Content-Type: application/json
 {
   "firstName": "Tomasz",
   "lastName": "Krasienko",
-  "password": "{{password}}",
-  "role": "User"
+  "password": "{{password}}"
 }
 
 ###

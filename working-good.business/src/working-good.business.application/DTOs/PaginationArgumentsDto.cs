@@ -6,7 +6,7 @@ public record PaginationArgumentsDto
     public int PageNumber
     {
         get => _pageNumber;
-        set => _pageNumber = value < 1 ? 1 : value - 1;
+        set => _pageNumber = value < 1 ? 0 : value - 1;
     }
     
     private const int MaxPageSize = 50;

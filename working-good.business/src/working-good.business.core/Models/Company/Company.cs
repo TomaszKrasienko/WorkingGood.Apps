@@ -55,17 +55,26 @@ public sealed class Company : AggregateRoot
     }
     
     internal void RegisterUser(IPasswordPolicy userPasswordPolicy, IPasswordManager passwordManager, EntityId employeeId, 
-        EntityId id, FullName fullName, Password password, Role role)
+        EntityId id, FullName fullName, Password password)
     {
         var employee = _employees.FirstOrDefault(x => x.Id.Equals(employeeId));
         if (employee is null)
         {
             throw new EmployeeDoesNotExistException(employeeId);
         }
-
+        Role role;
+        if (IsOwner)
+        {
+            if (Employees.Any(x => x.User is not null))
+                role = Role.Employee();
+            else
+                role = Role.Manager();
+        }
+        else
+        {
+            role = Role.User();
+        }
         var user = User.CreateUser(userPasswordPolicy, passwordManager, id, fullName, password, role, employeeId);
-        //Todo: To delete
-        Console.WriteLine(user.VerificationToken.Token);
         employee.User = user;
     }
 

@@ -16,7 +16,7 @@ internal sealed class SignUpCommandHandler(ICompanyRepository companyRepository,
             throw new CompaniesDoesNotExistException();
         }
         var company = userRegistrationService.RegisterNewUser(companies, command.EmployeeId,command.Id,  
-            command.FirstName, command.LastName, command.Password, command.Role);
+            command.FirstName, command.LastName, command.Password);
         await companyRepository.UpdateAsync(company);
     }
     

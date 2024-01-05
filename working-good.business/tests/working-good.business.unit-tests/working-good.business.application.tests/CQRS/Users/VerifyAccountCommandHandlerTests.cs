@@ -65,7 +65,7 @@ public sealed class VerifyAccountCommandHandlerTests
         _company.AddEmployee(employeeId, "test@test.pl");
         var registrationService = new UserRegistrationService(mockPasswordManager.Object, new UserPasswordPolicy());
         registrationService.RegisterNewUser([_company],  employeeId, Guid.NewGuid(),
-            "testFirstName", "testLastName", "Test123#", Role.User());
+            "testFirstName", "testLastName", "Test123#");
     }
     #endregion
 }

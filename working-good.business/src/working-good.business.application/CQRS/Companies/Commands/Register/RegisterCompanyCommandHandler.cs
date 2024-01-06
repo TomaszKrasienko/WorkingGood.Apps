@@ -19,7 +19,7 @@ internal sealed class RegisterCompanyCommandHandler : ICommandHandler<RegisterCo
     {
         var companies = await _companyRepository.GetAllAsync();
         var company = _companyRegistrationService.RegisterCompany(companies, command.Id, command.Name,
-            command.IsOwner, command.EmailDomain, command.SlaTimeSpan);
+            false, command.EmailDomain, command.SlaTimeSpan);
         await _companyRepository.AddAsync(company);
     }
 }

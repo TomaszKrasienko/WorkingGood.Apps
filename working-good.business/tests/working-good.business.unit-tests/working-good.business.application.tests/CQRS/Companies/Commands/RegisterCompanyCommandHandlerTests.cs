@@ -1,9 +1,13 @@
 using Moq;
 using working_good.business.application.CQRS.Companies.Commands.Register;
+using working_good.business.core.Abstractions;
 using working_good.business.core.Abstractions.Repositories;
 using working_good.business.core.DomainServices;
 using working_good.business.core.DomainServices.Abstractions;
 using working_good.business.core.Models.Company;
+using working_good.business.core.Policies;
+using working_good.business.core.Policies.Abstractions;
+using working_good.business.core.ValueObjects.User;
 using Xunit;
 
 namespace working_good.business.application.tests.CQRS.Companies.Commands;
@@ -11,30 +15,13 @@ namespace working_good.business.application.tests.CQRS.Companies.Commands;
 public sealed class RegisterCompanyCommandHandlerTests
 {
     [Fact]
-    public async Task Handle_ForRegisterCompanyCommandWithOwnerField_ShouldAddCompanyByRepository()
-    {
-        //arrange
-        _companyRepositoryMock
-            .Setup(f => f.GetAllAsync());
-        var command = new RegisterCompanyCommand(Guid.NewGuid(), "testOwnerCompanyName", true,
-            "test.pl");
-
-        //act
-        await _handler.HandleAsync(command, default);
-        
-        //assert
-        _companyRepositoryMock
-            .Verify(f => f.AddAsync(It.Is<Company>(arg
-                => arg.Id == command.Id
-                && arg.Name == command.Name
-                && arg.IsOwner == command.IsOwner
-                && arg.EmailDomain == command.EmailDomain)));
-    }
-    
-    [Fact]
     public async Task Handle_ForRegisterCompanyCommandWithExistedCompanies_ShouldAddCompanyByRepository()
     {
         //arrange
+        var employeeId = Guid.NewGuid();
+        _ownerCompany.AddEmployee(employeeId, "test@owner.pl");
+        _ownerCompany.RegisterUser(_passwordPolicy, _passwordManagerMock.Object, 
+            employeeId, Guid.NewGuid(), new FullName("test", "test"), "Pass123!");
         List<Company> companies = new List<Company>()
         {
             _company,
@@ -43,8 +30,8 @@ public sealed class RegisterCompanyCommandHandlerTests
         _companyRepositoryMock
             .Setup(f => f.GetAllAsync())
             .ReturnsAsync(companies);
-        var command = new RegisterCompanyCommand(Guid.NewGuid(), "newCompany", false,
-            "newtest.pl", TimeSpan.FromDays(1));
+        var command = new RegisterCompanyCommand(Guid.NewGuid(), "newCompany", "newtest.pl",
+            TimeSpan.FromDays(1));
 
         //act
         await _handler.HandleAsync(command, default);
@@ -54,12 +41,14 @@ public sealed class RegisterCompanyCommandHandlerTests
             .Verify(f => f.AddAsync(It.Is<Company>(arg
                 => arg.Id == command.Id
                    && arg.Name == command.Name
-                   && arg.IsOwner == command.IsOwner
+                   && arg.IsOwner == false
                    && arg.EmailDomain == command.EmailDomain
                    && arg.SlaTimeSpan.Value == command.SlaTimeSpan)));
     }
     
     #region arrange
+    private readonly IPasswordPolicy _passwordPolicy;
+    private readonly Mock<IPasswordManager> _passwordManagerMock;
     private readonly Mock<ICompanyRepository> _companyRepositoryMock;
     private readonly ICompanyRegistrationService _companyRegistrationService;
     private readonly RegisterCompanyCommandHandler _handler;
@@ -68,6 +57,11 @@ public sealed class RegisterCompanyCommandHandlerTests
     private readonly Company _ownerCompany;
     public RegisterCompanyCommandHandlerTests()
     {
+        _passwordPolicy = new UserPasswordPolicy();
+        _passwordManagerMock = new Mock<IPasswordManager>();
+        _passwordManagerMock
+            .Setup(f => f.Secure(It.IsAny<string>()))
+            .Returns("StrongPass123!");
         _companyRepositoryMock = new Mock<ICompanyRepository>();
         _companyRegistrationService = new CompanyRegistrationService();
         _handler = new RegisterCompanyCommandHandler(_companyRegistrationService, _companyRepositoryMock.Object);

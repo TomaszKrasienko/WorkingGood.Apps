@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using working_good.business.application.Services;
 using working_good.business.core.Abstractions;
 using working_good.business.core.Models;
 using working_good.business.core.Models.Company;
+using working_good.business.infrastructure.Auth.Configuration;
 using working_good.business.infrastructure.Configuration.Models;
 using working_good.business.infrastructure.DAL.Configuration;
 using working_good.business.infrastructure.Exceptions;
@@ -25,10 +28,12 @@ public static class Extensions
             .SetDalConfiguration(configuration)
             .SetSecurityConfiguration(configuration)
             .SetLoggingConfiguration(configuration)
+            .SetAuthConfiguration(configuration)
             .SetServices()
             .SetMiddlewares()
             .SetBanner(configuration)
-            .SetCorsPolicy(configuration);
+            .SetCorsPolicy(configuration)
+            .SetSwagger();
 
     private static IServiceCollection SetServices(this IServiceCollection services)
         => services
@@ -59,11 +64,36 @@ public static class Extensions
         return services;
     }
 
+    private static IServiceCollection SetSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+            {
+                Description = "Standard Authorization header using the Bearer scheme",
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey
+            });
+            options.OperationFilter<SecurityRequirementsOperationFilter>();
+        });
+        return services;
+    }
+
     public static WebApplication UseInfrastructure(this WebApplication app)
         => app
             .UseCorsPolicy()
-            .UseCustomMiddlewares();
+            .UseCustomMiddlewares()
+            .UseAppSwagger()
+            .UseAuth();
 
+    private static WebApplication UseAppSwagger(this WebApplication app)
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        return app;
+    }
+    
     private static WebApplication UseCustomMiddlewares(this WebApplication app)
     {
         app.UseMiddleware<CustomExceptionMiddleware>();

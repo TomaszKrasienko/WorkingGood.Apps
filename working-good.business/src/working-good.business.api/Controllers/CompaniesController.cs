@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using working_good.business.application.CQRS.Abstractions;
 using working_good.business.application.CQRS.Companies.Commands.Register;
+using working_good.business.application.CQRS.Companies.Commands.RegisterOwnerCompany;
 using working_good.business.application.CQRS.Companies.Queries.GetCompanies;
 using working_good.business.application.CQRS.Companies.Queries.GetCompanyById;
 using working_good.business.application.CQRS.Employees.Commands;
@@ -20,6 +22,7 @@ public sealed class CompaniesController(
     IQueryHandler<GetCompaniesQuery, QueryPaginationDto<IEnumerable<CompanyDto>>> getCompaniesQueryHandler,
     IQueryHandler<GetEmployeesQuery, QueryPaginationDto<IEnumerable<EmployeeDto>>> getEmployeesQueryHandler,
     ICommandHandler<RegisterCompanyCommand> registerCompanyCommandHandler,
+    ICommandHandler<RegisterOwnerCompanyCommand> registerOwnerCommandHandler,
     ICommandHandler<AddEmployeeCommand> addEmployeeCommandHandler,
     ICommandHandler<SignUpCommand> signUpCommandHandler,
     ICommandHandler<VerifyAccountCommand> verifyCommandHandler,
@@ -27,6 +30,8 @@ public sealed class CompaniesController(
     IAccessTokenStorage accessTokenStorage
     ) : ControllerBase
 {
+    //Todo: Tu by się przydało Policy
+    [Authorize]
     [HttpGet("{companyId:guid}")]
     public async Task<ActionResult<CompanyDto>> GetCompanyById(Guid companyId, CancellationToken cancellationToken)
     {
@@ -35,6 +40,7 @@ public sealed class CompaniesController(
     }
 
     [HttpGet]
+    [Authorize(Roles = "Manager, Employee")]
     public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies([FromQuery] GetCompaniesQuery getCompaniesQuery, CancellationToken cancellationToken)
     {
         var companies =
@@ -42,6 +48,8 @@ public sealed class CompaniesController(
         return Ok(companies);
     }
 
+    //Todo: Tu by się przydało Policy
+    [Authorize]
     [HttpGet("{companyId:guid}/employees")]
     public async Task<IActionResult> GetEmployeeByCompanyId([FromRoute] Guid companyId, [FromQuery]int pageSize, int pageNumber, CancellationToken cancellationToken)
     {
@@ -52,12 +60,28 @@ public sealed class CompaniesController(
         }, cancellationToken));
     }
     
+    //Todo: Tu by się przydało Policy
+    [Authorize]
     [HttpGet("employees/{employeeId:guid}")]
     public async Task<IActionResult> GetEmployeeById(Guid employeeId)
     {
         return Ok();
     }
+
+    [HttpPost("register-owner-company")]
+    public async Task<IActionResult> RegisterOwenCompany(RegisterOwnerCompanyCommand command,
+        CancellationToken cancellationToken)
+    {
+        await registerOwnerCommandHandler.HandleAsync(command with
+        {
+            CompanyId = Guid.NewGuid(), 
+            EmployeeId = Guid.NewGuid(), 
+            UserId = Guid.NewGuid()
+        }, cancellationToken);
+        return Created();
+    }
     
+    [Authorize(Roles = "Manager")]
     [HttpPost("register-company")]
     public async Task<IActionResult> RegisterCompany(RegisterCompanyCommand command, CancellationToken cancellationToken)
     {
@@ -66,6 +90,7 @@ public sealed class CompaniesController(
         return CreatedAtAction(nameof(GetCompanyById), new {companyId}, null);
     }
 
+    [Authorize(Roles = "Manager, Employee")]
     [HttpPost("{companyId}/add-employee")]
     public async Task<IActionResult> AddEmployee(Guid companyId, AddEmployeeCommand command, CancellationToken cancellationToken)
     {

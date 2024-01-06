@@ -9,12 +9,12 @@ internal sealed class CompanyRegistrationService : ICompanyRegistrationService
     public Company RegisterCompany(List<Company> companies, Guid id, string name, bool isOwner, string emailDomain,
         TimeSpan? slaTimeSpan = null)
     {
-        var isOwnerCompanyExists = companies?.Any(arg => arg.IsOwner) ?? false;
-        switch (isOwnerCompanyExists)
+        var ownerCompany = companies?.FirstOrDefault(x => x.IsOwner) ?? null;
+        switch (isOwner)
         {
-            case true when isOwner:
+            case true when ownerCompany is not null:
                 throw new OwnerCompanyAlreadyExistsException();
-            case false when !isOwner:
+            case false when !(IsOwnerCompanyFullyRegistered(ownerCompany)):
                 throw new OwnerCompanyDoesNotExistsException();
         }
 
@@ -34,4 +34,7 @@ internal sealed class CompanyRegistrationService : ICompanyRegistrationService
             ? Company.CreateOwnerCompany(id, name, emailDomain) 
             : Company.CreateCompany(id, name, slaTimeSpan, emailDomain);
     }
+
+    private bool IsOwnerCompanyFullyRegistered(Company ownerCompany)
+        => ownerCompany is not null && ownerCompany.Employees.Any(x => x.User != null);
 }

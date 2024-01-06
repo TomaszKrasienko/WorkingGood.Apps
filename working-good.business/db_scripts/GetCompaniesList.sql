@@ -36,6 +36,7 @@ OFFSET (@pageSize * @pageNumber) ROWS FETCH NEXT @pageSize ROWS ONLY
 DECLARE @totalCount FLOAT = (SELECT 
                                   COUNT(1)
                               FROM #TmpCompanies)
+    SET @pageNumber = @pageNumber + 1;
     DECLARE @totalPages INT = CEILING(@totalCount / @pageSize)
     DECLARE @hasNext BIT 
     IF @totalPages <> @pageNumber
@@ -44,7 +45,7 @@ DECLARE @totalCount FLOAT = (SELECT
         SET @hasNext = 0
 
     DECLARE @hasPrevious BIT 
-    IF @pageNumber != 0
+    IF @pageNumber != 1
         SET @hasPrevious = 1
     ELSE
         SET @hasPrevious = 0

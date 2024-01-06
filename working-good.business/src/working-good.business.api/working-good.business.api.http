@@ -2,7 +2,7 @@
 # @url = http://localhost:30021
 @email = tomasz.krasienko@outlook.com
 @password = Test123#
-@companyId = 1049eec8-567f-433b-9665-4f10748f7c47
+@companyId = f56d3723-3315-40e9-b3cf-18e302d75d55
 @employeeId = 6e277d1d-4c2b-4c28-99fe-3e2dd90f9bcd
 
 ###
@@ -12,21 +12,22 @@ GET {{url}}/companies/{{companyId}}
 GET {{url}}/companies?PageSize=2&PageNumber=1
 
 ###
-GET {{url}}/companies/employees/users/get-available-roles
-
-###
 GET {{url}}/companies/{{companyId}}/employees?PageSize=3&PageNumber1
 
 ###
-POST {{url}}/companies/register-company
+POST {{url}}/companies/register-owner-company
 Content-Type: application/json
 
 {
   "name": "OwnerCompany",
-  "isOwner": true,
-  "emailDomain": "outlook.com"
+  "emailDomain": "outlook.com",
+  "employeeEmail": "test@outlook.com",
+  "firstName":"testFirstName",
+  "lastName":"testLastName",
+  "password":"Test123#"
 }
 
+#Client company registration
 ###
 POST {{url}}/companies/register-company
 Content-Type: application/json
@@ -43,7 +44,7 @@ POST {{url}}/companies/{{companyId}}/add-employee
 Content-Type: application/json
 
 {
-  "email":"testEmployee3@test2.com" 
+  "email":"owner@outlook.com" 
 }
 
 ###

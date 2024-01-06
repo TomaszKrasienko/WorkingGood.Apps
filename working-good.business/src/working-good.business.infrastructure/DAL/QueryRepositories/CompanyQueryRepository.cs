@@ -52,4 +52,15 @@ internal sealed class CompanyQueryRepository(IWgDbConnection dbConnection) : ICo
             param: parameters);
         return result;
     }
+
+    public async Task<bool> IsOwnerCompanyRegistered()
+    {
+        string query = @"
+            SELECT 
+                COUNT(1)
+            FROM wg.Companies";
+        using var connection = dbConnection.DbConnection;
+        var result = await connection.QueryFirstAsync<int>(sql: query);
+        return result > 0;
+    }
 }

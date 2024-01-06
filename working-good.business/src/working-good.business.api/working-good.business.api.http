@@ -6,6 +6,9 @@
 @employeeId = 6e277d1d-4c2b-4c28-99fe-3e2dd90f9bcd
 
 ###
+GET {{url}}/companies/is-owner-registered
+
+###
 GET {{url}}/companies/{{companyId}}
 
 ###

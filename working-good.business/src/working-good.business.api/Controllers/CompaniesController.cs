@@ -5,6 +5,7 @@ using working_good.business.application.CQRS.Companies.Commands.Register;
 using working_good.business.application.CQRS.Companies.Commands.RegisterOwnerCompany;
 using working_good.business.application.CQRS.Companies.Queries.GetCompanies;
 using working_good.business.application.CQRS.Companies.Queries.GetCompanyById;
+using working_good.business.application.CQRS.Companies.Queries.IsOwnerCompanyRegistered;
 using working_good.business.application.CQRS.Employees.Commands;
 using working_good.business.application.CQRS.Employees.Queries.GetEmployees;
 using working_good.business.application.CQRS.Users.Command.SignIn;
@@ -21,6 +22,7 @@ public sealed class CompaniesController(
     IQueryHandler<GetCompanyByIdQuery, CompanyDto> getCompanyQueryHandler,
     IQueryHandler<GetCompaniesQuery, QueryPaginationDto<IEnumerable<CompanyDto>>> getCompaniesQueryHandler,
     IQueryHandler<GetEmployeesQuery, QueryPaginationDto<IEnumerable<EmployeeDto>>> getEmployeesQueryHandler,
+    IQueryHandler<IsOwnerCompanyRegisteredQuery, bool> isOwnerCompanyRegisteredQueryHandler,
     ICommandHandler<RegisterCompanyCommand> registerCompanyCommandHandler,
     ICommandHandler<RegisterOwnerCompanyCommand> registerOwnerCommandHandler,
     ICommandHandler<AddEmployeeCommand> addEmployeeCommandHandler,
@@ -30,6 +32,11 @@ public sealed class CompaniesController(
     IAccessTokenStorage accessTokenStorage
     ) : ControllerBase
 {
+    [HttpGet("is-owner-registered")]
+    public async Task<ActionResult<bool>> IsOwnerCompanyRegistered(CancellationToken cancellationToken)
+        => Ok(await isOwnerCompanyRegisteredQueryHandler.HandleAsync(new IsOwnerCompanyRegisteredQuery(),
+            cancellationToken));
+    
     //Todo: Tu by się przydało Policy
     [Authorize]
     [HttpGet("{companyId:guid}")]

@@ -8,4 +8,5 @@ public interface ICompanyQueryRepository
         string name = null, bool? isOwner = null);
 
     Task<CompanyDto> GetCompanyById(Guid id);
+    Task<bool> IsOwnerCompanyRegistered();
 }
